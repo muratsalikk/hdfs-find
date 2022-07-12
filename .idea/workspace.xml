@@ -90,7 +90,7 @@
     <configuration name="timetest" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -newer /user/hdoop/file0712_0" />
+      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -atime +8" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -136,7 +136,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657290058816</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added time tests">
+      <created>1657628259584</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1657628259585</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -168,7 +175,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="first git test" />
-    <option name="LAST_COMMIT_MESSAGE" value="first git test" />
+    <MESSAGE value="added time tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="added time tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -176,6 +184,10 @@
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.NoClassDefFoundError" package="java.lang" />
           <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NumberFormatException" package="java.lang" />
+          <option name="timeStamp" value="2" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

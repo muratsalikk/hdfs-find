@@ -33,6 +33,9 @@ public class Filter {
         FileStatus[] fst = hfs.listStatus(wd);
         for (FileStatus item : fst) {
             if (item.isDirectory()){
+                if (!(runFilterLogic(item))){
+                    continue;
+                }
                 continue;
                 //filter(item.getPath());
                 //if (!(runFilterLogic(item.getPath()))){ }
@@ -41,7 +44,7 @@ public class Filter {
                     continue;
                 }
             }
-            System.out.println(item.getPath().toString());
+            System.out.println(item.getPath().toString().replace(hfs.getUri().toString() , ""));
         }
     }
 
@@ -76,7 +79,7 @@ public class Filter {
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
-        System.out.println("result> "+result );
+        //System.out.println("result> "+result );
         return result;
     }
 

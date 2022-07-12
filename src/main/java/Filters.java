@@ -116,7 +116,7 @@ public class Filters {
             System.exit(1);
         }
         if (identifier == 0) {
-            r = (file.getAccessTime() < ref.getAccessTime());
+            r = (file.getAccessTime() > ref.getAccessTime());
         } else if (identifier == 1){
             r = (file.getModificationTime() > ref.getModificationTime());
         }
