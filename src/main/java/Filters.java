@@ -1,5 +1,8 @@
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,10 +62,68 @@ public class Filters {
     }
 */
 
-    boolean filterName(Pattern p, FileStatus file) {
+    boolean filterName(FileStatus file, Pattern p ) {
         return (p.matcher(file.getPath().getName()).matches());
     }
-    boolean filterModificationTime(long value, FileStatus file, int identifier) {
-        return true;
+
+    boolean filterAccessTime(FileStatus file, long value, int identifier) {
+        boolean r=false;
+        if (identifier == 0) {
+            r = (file.getAccessTime() >= value);
+        } else if (identifier == 1) {
+            r = (file.getAccessTime() <= value);
+        } else if (identifier == 2) {
+            long a= file.getAccessTime();
+            a = a - a%60000;
+            r = (a  == value);
+        }else if (identifier == 3) {
+            long a= file.getAccessTime();
+            a = a - a%(60000*1440);
+            long v = value - value%(60000*1440);
+            r = (a  == v);
+        }
+        return r;
     }
+
+    boolean filterModificationTime(FileStatus file, long value, int identifier) {
+        boolean r=false;
+        if (identifier == 0) {
+            r = (file.getModificationTime() >= value);
+        } else if (identifier == 1) {
+            r = (file.getModificationTime() <= value);
+        } else if (identifier == 2) {
+            long a= file.getModificationTime();
+            a = a - a%60000;
+            r = (a  == value);
+        } else if (identifier == 3) {
+            long a= file.getModificationTime();
+            a -= a % (60000 * 1440);
+            long v = value - value%(60000*1440);
+            r = (a  == v);
+        }
+        return r;
+    }
+
+    boolean filterNewer (FileStatus file, String reference, FileSystem hfs, int identifier) {
+        boolean r= false;
+        Path p = new Path(reference);
+        FileStatus ref = null;
+
+        try {
+            ref = hfs.getFileStatus(p);
+        } catch (IOException e) {
+            System.out.println("reference file (" + reference + ") does not found.");
+            System.exit(1);
+        }
+        if (identifier == 0) {
+            r = (file.getAccessTime() < ref.getAccessTime());
+        } else if (identifier == 1){
+            r = (file.getModificationTime() > ref.getModificationTime());
+        }
+        return r;
+    }
+
+
+
+
 }

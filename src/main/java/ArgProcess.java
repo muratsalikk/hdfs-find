@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArgProcess {
-    static String[] args ;;
+    static String[] args ;
     public ArgProcess(String[] args) {
         ArgProcess.args =args;
     }
@@ -36,14 +36,40 @@ public class ArgProcess {
                     .hasArg()
                     .build());
 
+            //TIME OPTIONS
+            options.addOption(Option.builder("AMIN").option("amin")
+                    .desc("File was last accessed n minutes ago.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("ANEWER").option("anewer")
+                    .desc("Time  of  the last access of the current file is " +
+                            "more recent than that of the last data modification of the reference file.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("ATIME").option("atime")
+                    .desc("File was last accessed n*24 hours ago.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("MMIN").option("mmin")
+                    .desc("File's data was last modified n minutes ago.")
+                    .hasArg()
+                    .build());
             options.addOption(Option.builder("MTIME").option("mtime")
                     .desc("File's data was last modified n*24 hours ago.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("NEWER").option("newer")
+                    .desc("Time  of the last data modification of the current file is " +
+                            "more recent than that of the last data modification of the reference file.")
                     .hasArg()
                     .build());
 
             options.addOption("o","Or");
             options.addOption("a","And");
+
+            options.addOption("h", "help", false, "help");
         }
+
 
         CommandLine line = null;
         try {
@@ -53,74 +79,137 @@ public class ArgProcess {
             System.exit(1);
         }
 
-        String initialPath = line.getArgList().get(0);
-        FilterArg iP = new FilterArg();
-        iP.setCond("initialPath");
-        iP.setValue(initialPath);
-        al.add(iP);
+        //take wd, path as first arg
+        if(line.getArgList().size() > 0) {
+            String initialPath = line.getArgList().get(0);
+            FilterArg iP = new FilterArg();
+            iP.setCond("initialPath");
+            iP.setValue(initialPath);
+            al.add(iP);
+        } else if (!options.hasOption("h")) {
+            printHelp(options, 1);
+        } else {
+            System.out.println("Unexpected usage.");
+            printHelp(options, 1);
+        }
 
         for (Option o : line.getOptions()) {
             FilterArg a = new FilterArg();
+            String v;
             switch (o.getOpt()) {
                 /* STRINGS */
-                case "name":
+                case "name" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(toPattern(o.getValue())));
                     a.setIdentifier(0);
-                    break;
-                case "iname":
+                }
+                case "iname" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE));
                     a.setIdentifier(1);
-                    break;
-                case "regex":
+                }
+                case "regex" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(o.getValue()));
                     a.setIdentifier(0);
-                    break;
-                case "iregex":
+                }
+                case "iregex" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE));
                     a.setIdentifier(0);
-                    break;
+                }
 
                 /* TIME */
-                case "mtime":
-                    a.setCond("mtime");
-                    String v = o.getValue();
+                case "amin" -> {
+                    a.setCond("atime");
+                    v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setValue(toMillis(tointeger(v.replace('+', '0')))*24*60);
-                        a.setIdentifier(2);
+                        a.setValue(toMillis(toInteger(v.replace('+', '0'))));
+                        a.setIdentifier(1);
                     } else if (v.charAt(0) == '-') {
-                        a.setValue(toMillis(tointeger(v.replace('+', '0')))*24*60);
+                        a.setValue(toMillis(toInteger(v.replace('-', '0'))));
                         a.setIdentifier(0);
                     } else {
-                        a.setValue(toMillis(tointeger(v)*24*60));
-                        a.setIdentifier(1);
+                        a.setValue(toMillis(toInteger(v)));
+                        a.setIdentifier(2);
                     }
-                    break;
+                }
+                case "anewer" -> {
+                    a.setCond("newer");
+                    a.setValue(o.getValue());
+                    a.setIdentifier(0);
+                }
+                case "atime" -> {
+                    a.setCond("atime");
+                    v = o.getValue();
+                    if (v.charAt(0) == '+') {
+                        a.setValue(toMillis(toInteger(v.replace('+', '0'))) * 24 * 60);
+                        a.setIdentifier(1);
+                    } else if (v.charAt(0) == '-') {
+                        a.setValue(toMillis(toInteger(v.replace('-', '0'))) * 24 * 60);
+                        a.setIdentifier(0);
+                    } else {
+                        a.setValue(toMillis(toInteger(v) * 24 * 60));
+                        a.setIdentifier(3);
+                    }
+                }
+                case "mmin" -> {
+                    a.setCond("mtime");
+                    v = o.getValue();
+                    if (v.charAt(0) == '+') {
+                        a.setValue(toMillis(toInteger(v.replace('+', '0'))));
+                        a.setIdentifier(1);
+                    } else if (v.charAt(0) == '-') {
+                        a.setValue(toMillis(toInteger(v.replace('-', '0'))));
+                        a.setIdentifier(0);
+                    } else {
+                        a.setValue(toMillis(toInteger(v)));
+                        a.setIdentifier(2);
+                    }
+                }
+                case "mtime" -> {
+                    a.setCond("mtime");
+                    v = o.getValue();
+                    if (v.charAt(0) == '+') {
+                        a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
+                        a.setIdentifier(2);
+                    } else if (v.charAt(0) == '-') {
+                        a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
+                        a.setIdentifier(0);
+                    } else {
+                        a.setValue(toMillis(toInteger(v) * 1440));
+                        a.setIdentifier(3);
+                    }
+                }
+                case "newer" -> {
+                    a.setCond("newer");
+                    a.setValue(o.getValue());
+                    a.setIdentifier(1);
+                }
+
 
                 /* OPERATORS */
-                case "o":
-                    a.setCond("OR");
-                    break;
-                case "a":
-                    a.setCond("AND");
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + o.getOpt());
+                case "o" -> a.setCond("OR");
+                case "a" -> a.setCond("AND");
+
+                /* ETC */
+                case "h" -> {
+                    printHelp(options,0);
+                }
+
+                default -> throw new IllegalStateException("Unexpected value: " + o.getOpt());
             }
             al.add(a);
         }
         return al;
     }
 
-    static int tointeger(String s) {
+    static int toInteger(String s) {
         int n = 0;
         try {
             n = Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            System.out.println("invalid input for age cond: "+ s);
+            System.out.println("invalid input for date cond: "+ s);
             e.printStackTrace();
             System.exit(1);
         }
@@ -128,7 +217,7 @@ public class ArgProcess {
     }
 
     static long toMillis(int i) {
-        long result=0;
+        long result;
         long min=60000;
         long currentMillisMin=System.currentTimeMillis()-System.currentTimeMillis()%min;
         result=currentMillisMin-(min*i);
@@ -138,7 +227,7 @@ public class ArgProcess {
     static String toPattern(String s) {
         Pattern p = Pattern.compile("[^*?]+|(\\*)|(\\?)");
         Matcher m = p.matcher(s);
-        StringBuffer b= new StringBuffer();
+        StringBuilder b= new StringBuilder();
         while (m.find()) {
             if(m.group(1) != null) m.appendReplacement(b, ".*");
             else if(m.group(2) != null) m.appendReplacement(b, ".");
@@ -146,6 +235,12 @@ public class ArgProcess {
         }
         m.appendTail(b);
         return b.toString();
+    }
+
+    static void printHelp(Options options, int status) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("hdfs-find", "header", options, "footer", true);
+        System.exit(status);
     }
 
 }

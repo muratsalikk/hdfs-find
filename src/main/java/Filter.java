@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 
 import org.apache.hadoop.fs.FileStatus;
@@ -82,7 +83,11 @@ public class Filter {
     boolean runFilter (FilterArg a, FileStatus file) {
         Filters f = new Filters();
         return switch (a.getCond()) {
-            case "name" -> f.filterName(a.getPvalue(), file) ;
+            case "name" -> f.filterName(file, a.getPvalue()) ;
+            case "mtime" -> f.filterModificationTime(file, a.getLvalue(), a.getIdentifier());
+            case "atime" -> f.filterAccessTime(file, a.getLvalue(), a.getIdentifier());
+            case "newer" -> f.filterNewer(file, a.getSvalue(), hfs, a.getIdentifier());
+
             default -> false;
         };
     }
