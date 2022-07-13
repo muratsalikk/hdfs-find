@@ -18,6 +18,21 @@ public class ArgProcess {
         Options options = new Options();
 
         { //Define options
+            options.addOption(Option.builder("DEPTH").option("depth")
+                    .desc("Process each directory's contents before the directory itself.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("MAXDEPTH").option("maxdepth")
+                    .desc("Descend at most levels (a non-negative integer) levels of directories below the starting-points.")
+                    .hasArg()
+                    .build());
+            options.addOption(Option.builder("MINDEPTH").option("mindepth")
+                    .desc("Do not apply any tests or actions at levels less than levels (a non-negative integer).")
+                    .hasArg()
+                    .build());
+
+
+            //NAME SEARCHES
             options.addOption(Option.builder("NAME").option("name")
                     .desc("Base of file name (the path with the leading directories removed) matches shell pattern pattern.")
                     .hasArg()
@@ -96,7 +111,23 @@ public class ArgProcess {
             FilterArg a = new FilterArg();
             String v;
             switch (o.getOpt()) {
-                /* STRINGS */
+                case "depth" -> {
+                    a.setCond("depth");
+                    a.setValue(toInteger(o.getValue()));
+                    a.setIdentifier(0);
+                }
+                case "mindepth" -> {
+                    a.setCond("mindepth");
+                    a.setValue(toInteger(o.getValue()));
+                    a.setIdentifier(0);
+                }
+                case "maxdepth" -> {
+                    a.setCond("maxdepth");
+                    a.setValue(toInteger(o.getValue()));
+                    a.setIdentifier(0);
+                }
+
+                /* NAME SEARCHES */
                 case "name" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(toPattern(o.getValue())));
@@ -120,17 +151,16 @@ public class ArgProcess {
 
                 /* TIME */
                 case "amin" -> {
-                    a.setCond("atime");
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
+                        a.setCond("atimeolder");
                         a.setValue(toMillis(toInteger(v.replace('+', '0'))));
-                        a.setIdentifier(1);
                     } else if (v.charAt(0) == '-') {
+                        a.setCond("atimenewer");
                         a.setValue(toMillis(toInteger(v.replace('-', '0'))));
-                        a.setIdentifier(0);
                     } else {
+                        a.setCond("atimeequalmin");
                         a.setValue(toMillis(toInteger(v)));
-                        a.setIdentifier(2);
                     }
                 }
                 case "anewer" -> {
@@ -139,19 +169,22 @@ public class ArgProcess {
                     a.setIdentifier(0);
                 }
                 case "atime" -> {
-                    a.setCond("atime");
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setValue(toMillis(toInteger(v.replace('+', '0'))) * 24 * 60);
+                        a.setCond("atimeolder");
+                        a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
                         a.setIdentifier(1);
                     } else if (v.charAt(0) == '-') {
-                        a.setValue(toMillis(toInteger(v.replace('-', '0'))) * 24 * 60);
+                        a.setCond("atimenewer");
+                        a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
                         a.setIdentifier(0);
                     } else {
-                        a.setValue(toMillis(toInteger(v) * 24 * 60));
+                        a.setCond("atimeequalday");
+                        a.setValue(toMillis(toInteger(v) * 1440));
                         a.setIdentifier(3);
                     }
                 }
+
                 case "mmin" -> {
                     a.setCond("mtime");
                     v = o.getValue();
@@ -167,15 +200,17 @@ public class ArgProcess {
                     }
                 }
                 case "mtime" -> {
-                    a.setCond("mtime");
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
+                        a.setCond("mtime");
                         a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
                         a.setIdentifier(2);
                     } else if (v.charAt(0) == '-') {
+                        a.setCond("mtime");
                         a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
                         a.setIdentifier(0);
                     } else {
+                        a.setCond("mtime");
                         a.setValue(toMillis(toInteger(v) * 1440));
                         a.setIdentifier(3);
                     }

@@ -9,11 +9,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/FilterArg.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FilterArg.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Filters.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filters.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +88,7 @@
     <configuration name="timetest" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -atime +8" />
+      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -mtime -10 -maxdepth 2" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -143,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657628259585</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added hdfs configuration">
+      <created>1657634311765</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1657634311765</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -176,7 +181,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="first git test" />
     <MESSAGE value="added time tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="added time tests" />
+    <MESSAGE value="added hdfs configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="added hdfs configuration" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

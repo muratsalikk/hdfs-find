@@ -78,11 +78,29 @@ public class Filters {
             r = (a  == value);
         }else if (identifier == 3) {
             long a= file.getAccessTime();
-            a = a - a%(60000*1440);
+            a -= a % (60000*1440);
             long v = value - value%(60000*1440);
             r = (a  == v);
         }
         return r;
+    }
+
+    boolean filterAccessTimeNewer(FileStatus file, long value) {
+        return (file.getAccessTime() >= value);
+    }
+    boolean filterAccessTimeOlder(FileStatus file, long value) {
+        return (file.getAccessTime() <= value);
+    }
+    boolean filterAccessTimeEqualDay(FileStatus file, long value) {
+        long a= file.getAccessTime();
+        a = a - a%60000;
+        return (a  == value);
+    }
+    boolean filterAccessTimeEqualMin(FileStatus file, long value) {
+        long a= file.getAccessTime();
+        a -= a % (60000*1440);
+        long v = value - value%(60000*1440);
+        return (a  == v);
     }
 
     boolean filterModificationTime(FileStatus file, long value, int identifier) {
@@ -123,7 +141,15 @@ public class Filters {
         return r;
     }
 
+    boolean filterDepth(FileStatus file, int mindepth) {
+        return (file.getPath().depth() == mindepth);
+    }
 
+    boolean filterMinDepth(FileStatus file, int mindepth) {
+        return (file.getPath().depth() > mindepth);
+    }
 
-
+    boolean filterMaxDepth(FileStatus file, int maxdepth) {
+        return (file.getPath().depth() < maxdepth);
+    }
 }
