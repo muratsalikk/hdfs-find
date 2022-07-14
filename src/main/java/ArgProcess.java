@@ -18,10 +18,6 @@ public class ArgProcess {
         Options options = new Options();
 
         { //Define options
-            options.addOption(Option.builder("DEPTH").option("depth")
-                    .desc("Process each directory's contents before the directory itself.")
-                    .hasArg()
-                    .build());
             options.addOption(Option.builder("MAXDEPTH").option("maxdepth")
                     .desc("Descend at most levels (a non-negative integer) levels of directories below the starting-points.")
                     .hasArg()
@@ -78,6 +74,12 @@ public class ArgProcess {
                     .hasArg()
                     .build());
 
+            // TYPE-SIZE
+            options.addOption(Option.builder("TYPE").option("type")
+                    .desc("File is of type: d (directory) f (regular file) l (symbolic link)")
+                    .hasArg()
+                    .build());
+
             options.addOption("o","Or");
             options.addOption("a","And");
 
@@ -111,11 +113,6 @@ public class ArgProcess {
             FilterArg a = new FilterArg();
             String v;
             switch (o.getOpt()) {
-                case "depth" -> {
-                    a.setCond("depth");
-                    a.setValue(toInteger(o.getValue()));
-                    a.setIdentifier(0);
-                }
                 case "mindepth" -> {
                     a.setCond("mindepth");
                     a.setValue(toInteger(o.getValue()));
@@ -127,26 +124,22 @@ public class ArgProcess {
                     a.setIdentifier(0);
                 }
 
-                /* NAME SEARCHES */
+                /* NAME */
                 case "name" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(toPattern(o.getValue())));
-                    a.setIdentifier(0);
                 }
                 case "iname" -> {
                     a.setCond("name");
-                    a.setValue(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE));
-                    a.setIdentifier(1);
+                    a.setValue(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE));
                 }
                 case "regex" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(o.getValue()));
-                    a.setIdentifier(0);
                 }
                 case "iregex" -> {
                     a.setCond("name");
                     a.setValue(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE));
-                    a.setIdentifier(0);
                 }
 
                 /* TIME */
@@ -184,33 +177,31 @@ public class ArgProcess {
                         a.setIdentifier(3);
                     }
                 }
-
                 case "mmin" -> {
-                    a.setCond("mtime");
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
+                        a.setCond("mtimeolder");
                         a.setValue(toMillis(toInteger(v.replace('+', '0'))));
-                        a.setIdentifier(1);
                     } else if (v.charAt(0) == '-') {
+                        a.setCond("mtimenewer");
                         a.setValue(toMillis(toInteger(v.replace('-', '0'))));
-                        a.setIdentifier(0);
                     } else {
+                        a.setCond("mtimeequalmin");
                         a.setValue(toMillis(toInteger(v)));
-                        a.setIdentifier(2);
                     }
                 }
                 case "mtime" -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("mtime");
+                        a.setCond("mtimeolder");
                         a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
                         a.setIdentifier(2);
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("mtime");
+                        a.setCond("mtimenewer");
                         a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
                         a.setIdentifier(0);
                     } else {
-                        a.setCond("mtime");
+                        a.setCond("mtimeequalday");
                         a.setValue(toMillis(toInteger(v) * 1440));
                         a.setIdentifier(3);
                     }
@@ -221,6 +212,16 @@ public class ArgProcess {
                     a.setIdentifier(1);
                 }
 
+                /* ATTRIBUTES */
+                case "type" -> {
+                    a.setCond("type");
+                    a.setValue(o.getValue());
+                }
+                //TODO: toSize function needed
+                case "size" -> {
+                    a.setCond("size");
+                    a.setValue(0);
+                }
 
                 /* OPERATORS */
                 case "o" -> a.setCond("OR");
@@ -230,7 +231,6 @@ public class ArgProcess {
                 case "h" -> {
                     printHelp(options,0);
                 }
-
                 default -> throw new IllegalStateException("Unexpected value: " + o.getOpt());
             }
             al.add(a);

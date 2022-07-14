@@ -27,9 +27,9 @@ public class Filter {
         assert initialPath != null;
         this.wd = new Path(initialPath);
 
-        for (FilterArg  f : al) {
-            if (f.getCond().equals("depth") || f.getCond().equals("mindepth") || f.getCond().equals("maxdepth")) {
-                f.setValue(f.getIvalue() + wd.depth() + 1);
+        for (FilterArg  a : al) {
+            if (a.getCond().equals("depth") || a.getCond().equals("mindepth") || a.getCond().equals("maxdepth")) {
+                a.setValue(a.getIvalue() + wd.depth() + 1);
             }
         }
 
@@ -40,10 +40,10 @@ public class Filter {
         FileStatus[] fst = hfs.listStatus(wd);
         for (FileStatus item : fst) {
             if (item.isDirectory()){
+                filter(item.getPath());
                 if (!(runFilterLogic(item))){
                     continue;
                 }
-                filter(item.getPath());
             } else{
                 if (!(runFilterLogic(item))){
                     continue;
@@ -82,7 +82,11 @@ public class Filter {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
+            if (al.size()==0) {
+                result=true;
+            } else {
+                e.printStackTrace();
+            }
         }
         //System.out.println("result> "+result );
         return result;
@@ -91,16 +95,19 @@ public class Filter {
     boolean runFilter (FilterArg a, FileStatus file) {
         Filters f = new Filters();
         return switch (a.getCond()) {
-            case "depth" -> f.filterDepth(file, a.getIvalue());
             case "maxdepth" -> f.filterMaxDepth(file, a.getIvalue());
             case "mindepth" -> f.filterMinDepth(file,a.getIvalue());
-            case "name" -> f.filterName(file, a.getPvalue()) ;
-            case "mtime" -> f.filterModificationTime(file, a.getLvalue(), a.getIdentifier());
+            case "name" -> f.filterName(file, a.getPvalue());
             case "atimeolder" -> f.filterAccessTimeOlder(file, a.getLvalue());
             case "atimenewer" -> f.filterAccessTimeNewer(file, a.getLvalue());
             case "atimeequalmin" -> f.filterAccessTimeEqualMin(file, a.getLvalue());
             case "atimeequalday" -> f.filterAccessTimeEqualDay(file, a.getLvalue());
+            case "mtimeolder" -> f.filterModificationTimeOlder(file, a.getLvalue());
+            case "mtimenewer" -> f.filterModificationTimeNewer(file, a.getLvalue());
+            case "mtimeequalmin" -> f.filterModificationTimeEqualMin(file, a.getLvalue());
+            case "mtimeequalday" -> f.filterModificationTimeEqualDay(file, a.getLvalue());
             case "newer" -> f.filterNewer(file, a.getSvalue(), hfs, a.getIdentifier());
+            case "type" -> f.filterType(file,a.getSvalue());
             default -> false;
         };
     }

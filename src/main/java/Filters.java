@@ -2,6 +2,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,23 +104,22 @@ public class Filters {
         return (a  == v);
     }
 
-    boolean filterModificationTime(FileStatus file, long value, int identifier) {
-        boolean r=false;
-        if (identifier == 0) {
-            r = (file.getModificationTime() >= value);
-        } else if (identifier == 1) {
-            r = (file.getModificationTime() <= value);
-        } else if (identifier == 2) {
-            long a= file.getModificationTime();
-            a = a - a%60000;
-            r = (a  == value);
-        } else if (identifier == 3) {
-            long a= file.getModificationTime();
-            a -= a % (60000 * 1440);
-            long v = value - value%(60000*1440);
-            r = (a  == v);
-        }
-        return r;
+    boolean filterModificationTimeNewer(FileStatus file, long value) {
+        return (file.getModificationTime() >= value);
+    }
+    boolean filterModificationTimeOlder(FileStatus file, long value) {
+        return (file.getModificationTime() <= value);
+    }
+    boolean filterModificationTimeEqualDay(FileStatus file, long value) {
+        long a= file.getModificationTime();
+        a = a - a%60000;
+        return (a  == value);
+    }
+    boolean filterModificationTimeEqualMin(FileStatus file, long value) {
+        long a= file.getModificationTime();
+        a -= a % (60000 * 1440);
+        long v = value - value%(60000*1440);
+        return (a  == v);
     }
 
     boolean filterNewer (FileStatus file, String reference, FileSystem hfs, int identifier) {
@@ -141,15 +141,19 @@ public class Filters {
         return r;
     }
 
-    boolean filterDepth(FileStatus file, int mindepth) {
-        return (file.getPath().depth() == mindepth);
-    }
-
     boolean filterMinDepth(FileStatus file, int mindepth) {
         return (file.getPath().depth() > mindepth);
     }
-
     boolean filterMaxDepth(FileStatus file, int maxdepth) {
         return (file.getPath().depth() < maxdepth);
+    }
+
+    boolean filterType(FileStatus file, String value) {
+        return switch (value) {
+            case "f" -> file.isFile();
+            case "d" -> file.isDirectory();
+            case "l" -> file.isSymlink();
+            default -> false;
+        };
     }
 }
