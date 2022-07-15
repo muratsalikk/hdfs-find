@@ -5,18 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Connect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/TestArg.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Exec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/PrintArg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Connect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Connect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Filters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/TestArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TestArg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/FilterArg.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Filters.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filters.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Filters.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,10 +88,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="printf" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="hdfs-find" />
+      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -mtime -10 -type f -printf %P---%d" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="timetest" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -mtime -10 -type d" />
+      <option name="PROGRAM_PARAMETERS" value="/user/hdoop -mtime -10 -type f " />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -102,6 +107,7 @@
     <list>
       <item itemvalue="Application.help" />
       <item itemvalue="Application.timetest" />
+      <item itemvalue="Application.printf" />
       <item itemvalue="Application.Main" />
     </list>
     <recent_temporary>
@@ -175,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657893823714</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="refactored with builder and filter design pattern">
+      <created>1657912498650</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1657912498650</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="UnknownFeatures">

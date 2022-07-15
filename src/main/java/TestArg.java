@@ -20,6 +20,7 @@ public class TestArg {
             case "mtimeolder" -> this.test = new FilterModificationTimeOlder(builder.longValue);
             case "mtimenewer" -> this.test = new FilterModificationTimeNewer(builder.longValue);
             case "mtimeequalmin" -> this.test = new FilterModificationTimeEqualMin(builder.longValue);
+            case "mtimeequalday" -> this.test = new FilterModificationTimeEqualDay(builder.longValue);
             case "newer" -> this.test = new FilterNewer(builder.fileValue);
             case "anewer" -> this.test = new FilterANewer(builder.fileValue);
             case "type" -> this.test = new FilterType(builder.charValue);

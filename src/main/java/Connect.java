@@ -15,12 +15,12 @@ import java.net.URI;
 
 public class Connect {
     Configuration conf = new Configuration();
-    static URI h;
+    static URI uri;
 
 
     static {
             try {
-            h = new URI("hdfs://localhost:9000");
+            uri = new URI("hdfs://localhost:9000");
             String hdfsCoreFile = null;
             if (System.getenv("HADOOP_CONF_DIR") == null) {
                 hdfsCoreFile = System.getenv("HADOOP_HDFS_HOME") + "/etc/hadoop/" + "core-site.xml";
@@ -40,8 +40,8 @@ public class Connect {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) node;
                     if (eElement.getElementsByTagName("name").item(0).getTextContent().equals("fs.default.name")) {
-                        h = new URI(eElement.getElementsByTagName("value").item(0).getTextContent());
-                        ;;;;System.out.println("from xml;"+h.toString());
+                        uri = new URI(eElement.getElementsByTagName("value").item(0).getTextContent());
+                        ;;;;System.out.println("from xml;"+ uri.toString());
                         break;
                     }
                 }
@@ -52,12 +52,16 @@ public class Connect {
         }
     }
 
+    URI getUri(){
+        return uri;
+    }
+
 
     FileSystem getFileSystem() {
         conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
         FileSystem hfs = null;
         try {
-            hfs = FileSystem.get(h, conf);
+            hfs = FileSystem.get(uri, conf);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

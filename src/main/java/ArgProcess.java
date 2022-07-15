@@ -12,6 +12,8 @@ public class ArgProcess {
         ArgProcess.args =args;
     }
 
+    static PrintArg printarg = new PrintArg("default");
+
     static List<TestArg> parseArgs() {
 
         List<TestArg> tl = new ArrayList<>();
@@ -88,6 +90,12 @@ public class ArgProcess {
                     .build());
             options.addOption("o","Or");
             options.addOption("a","And");
+
+            // PRINT
+            options.addOption(Option.builder("PRINTF").option("printf")
+                    .desc("Print  format on the standard output, with '%' directives.")
+                    .hasArgs()
+                    .build());
 
             options.addOption("h", "help", false, "help");
         }
@@ -262,7 +270,11 @@ public class ArgProcess {
                 case "o" -> t = new TestArg.TestArgBuilder("OR").value("OR").build();
                 case "a" -> t = new TestArg.TestArgBuilder("AND").value("AND").build();
 
-                /* ETC */
+                /* PRINT */
+                case "printf" -> {
+                    printarg = new PrintArg(o.getValues(), "printf");
+                    continue;
+                }
                 case "h" -> {
                     printHelp(options,0);
                 }
@@ -324,4 +336,7 @@ public class ArgProcess {
         System.exit(status);
     }
 
+    public static PrintArg getPrintarg() {
+        return printarg;
+    }
 }

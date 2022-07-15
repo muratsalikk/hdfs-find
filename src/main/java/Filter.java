@@ -10,6 +10,8 @@ public class Filter {
     String initialPath;
     Path wd;
 
+    PrintArg pa = ArgProcess.getPrintarg();
+
     public Filter(List<TestArg> tl, FileSystem hfs) throws Exception {
         this.tl = tl;
         for (TestArg f : tl){
@@ -46,7 +48,8 @@ public class Filter {
             if (!(runFilterLogic(item))){
                 continue;
             }
-            System.out.println(item.getPath().toString().replace(hfs.getUri().toString() , ""));
+            pa.print(item);
+            //System.out.println(item.getPath().toString().replace(hfs.getUri().toString() , ""));
         }
     }
 
