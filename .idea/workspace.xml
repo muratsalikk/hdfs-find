@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="added depth filters">
+    <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Filters.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filters.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +23,7 @@
       <list>
         <option value="Enum" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -64,7 +68,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.timetest">
+  <component name="RunManager" selected="Application.help">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
@@ -77,7 +81,7 @@
     <configuration name="help" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="-a -o" />
+      <option name="PROGRAM_PARAMETERS" value="-help" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -152,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657736279100</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="added type filter">
+      <created>1657820059254</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1657820059255</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -187,7 +198,8 @@
     <MESSAGE value="added time tests" />
     <MESSAGE value="added hdfs configuration" />
     <MESSAGE value="added depth filters" />
-    <option name="LAST_COMMIT_MESSAGE" value="added depth filters" />
+    <MESSAGE value="added type filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="added type filter" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

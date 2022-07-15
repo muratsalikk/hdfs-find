@@ -108,6 +108,12 @@ public class Filter {
             case "mtimeequalday" -> f.filterModificationTimeEqualDay(file, a.getLvalue());
             case "newer" -> f.filterNewer(file, a.getSvalue(), hfs, a.getIdentifier());
             case "type" -> f.filterType(file,a.getSvalue());
+            case "sizebigger" -> f.filterSizeBigger(file, a.getLvalue());
+            case "sizesmaller" -> f.filterSizeLower(file, a.getLvalue());
+            case "sizebequal" -> f.filterSizeBEqual(file, a.getLvalue());
+            case "sizekequal" -> f.filterSizeKEqual(file, a.getLvalue());
+            case "sizemequal" -> f.filterSizeMEqual(file, a.getLvalue());
+            case "sizegequal" -> f.filterSizeGEqual(file, a.getLvalue());
             default -> false;
         };
     }

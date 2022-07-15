@@ -2,66 +2,12 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Filters {
     public Filters() {
     }
-        /*
-    public boolean filterDepth(Path path, FilterArg f){
-        return true;
-    }
-
-    public boolean filterType(FileStatus file){
-        if (s.isType){
-            return((s.TYPE==1 && file.isFile()) || ((s.TYPE==2 && file.isDirectory())));
-        } else {return true;}
-    }
-
-    public boolean filterOwner(FileStatus file){
-        if(s.isOwner){
-            return(s.OWNER.equals(file.getOwner()));
-        } else {return true;}
-    }
-
-    public boolean filterGroup(FileStatus file){
-        if(s.isGroup){
-            return(s.GROUP.equals(file.getGroup()));
-        } else {return true;}
-    }
-    public boolean filterMtime(FileStatus file){
-        if (s.isMtime){
-            return(compareLongs(s.MTIME, file.getModificationTime(),true));
-        }else {return true;}
-    }
-
-    public boolean filterMmin(FileStatus file){
-        if (s.isMmin){
-            return(compareLongs(s.MMIN, file.getModificationTime(),true));
-        }else {return true;}
-    }
-
-    public boolean filterAtime(FileStatus file){
-        if (s.isAtime){
-            return(compareLongs(s.ATIME, file.getAccessTime(),true));
-        }else {return true;}
-    }
-
-    public boolean filterAmin(FileStatus file){
-        if (s.isAmin){
-            return(compareLongs(s.AMIN, file.getAccessTime(),true));
-        }else {return true;}
-    }
-
-    public boolean filterSize(FileStatus file){
-        if (s.isSize){
-            return(compareLongs(s.SIZE, file.getLen(),false));
-        }else {return true;}
-    }
-*/
 
     boolean filterName(FileStatus file, Pattern p ) {
         return (p.matcher(file.getPath().getName()).matches());
@@ -156,4 +102,30 @@ public class Filters {
             default -> false;
         };
     }
+
+    boolean filterSizeBigger(FileStatus file, long value) {
+        return (file.getLen() >= value);
+    }
+    boolean filterSizeLower(FileStatus file, long value) {
+        return (file.getLen() <= value);
+    }
+    boolean filterSizeBEqual(FileStatus file, long value) {
+        return (file.getLen() == value);
+    }
+    boolean filterSizeKEqual(FileStatus file, long value) {
+        long a = file.getLen();
+        a -= a%1024;
+        return (a == value);
+    }
+    boolean filterSizeMEqual(FileStatus file, long value) {
+        long a = file.getLen();
+        a -= a%(1024*1024);
+        return (a == value);
+    }
+    boolean filterSizeGEqual(FileStatus file, long value) {
+        long a = file.getLen();
+        a -= a%(1024*1024*1024);
+        return (a == value);
+    }
+
 }

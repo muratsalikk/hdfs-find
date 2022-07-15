@@ -17,7 +17,8 @@ public class ArgProcess {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
-        { //Define options
+        //Define options
+        {
             options.addOption(Option.builder("MAXDEPTH").option("maxdepth")
                     .desc("Descend at most levels (a non-negative integer) levels of directories below the starting-points.")
                     .hasArg()
@@ -74,12 +75,16 @@ public class ArgProcess {
                     .hasArg()
                     .build());
 
-            // TYPE-SIZE
+            // OTHER ATTRIBUTES
             options.addOption(Option.builder("TYPE").option("type")
                     .desc("File is of type: d (directory) f (regular file) l (symbolic link)")
                     .hasArg()
                     .build());
-
+            options.addOption(Option.builder("SIZE").option("size")
+                    .desc("File uses n units of space, rounding up. b (byte) k (kibibytes) m (mebibytes) g (gibibytes)")
+                    .hasArg()
+                    .argName("n")
+                    .build());
             options.addOption("o","Or");
             options.addOption("a","And");
 
@@ -212,15 +217,29 @@ public class ArgProcess {
                     a.setIdentifier(1);
                 }
 
-                /* ATTRIBUTES */
+                /* OTHER ATTRIBUTES */
                 case "type" -> {
                     a.setCond("type");
                     a.setValue(o.getValue());
                 }
-                //TODO: toSize function needed
                 case "size" -> {
-                    a.setCond("size");
-                    a.setValue(0);
+                    v=o.getValue();
+                    if (v.charAt(0) == '+') {
+                        a.setCond("sizebigger");
+                        a.setValue(toSize(v.replace('+', '0')));
+                    } else if (v.charAt(0) == '-') {
+                        a.setCond("sizesmaller");
+                        a.setValue(toSize(v.replace('-', '0')));
+                    } else {
+                        char lastChar = v.charAt(v.length() - 1);
+                        switch (lastChar) {
+                            case 'K', 'k' -> a.setCond("sizekequal");
+                            case 'M', 'm' -> a.setCond("sizemequal");
+                            case 'G', 'g' -> a.setCond("sizegequal");
+                            default -> a.setCond("sizebequal");
+                        }
+                        a.setValue(toSize(v));
+                    }
                 }
 
                 /* OPERATORS */
@@ -271,6 +290,18 @@ public class ArgProcess {
         return b.toString();
     }
 
+    static long toSize(String s) {
+        char lastChar = s.charAt(s.length()-1);
+        long value = Long.parseLong(s.substring(0,s.length()-2));
+        return switch (lastChar) {
+            case 'B', 'b' -> value;
+            case 'K', 'k' -> value * 1024;
+            case 'M', 'm' -> value * 1024 * 1024;
+            case 'G', 'g' -> value * 1024 * 1024 * 1024;
+            default -> (long) toInteger(s);
+        };
+    }
+
     static void printHelp(Options options, int status) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("hdfs-find", "header", options, "footer", true);
@@ -280,7 +311,7 @@ public class ArgProcess {
 }
 
 class FilterArg{
-
+    Test test;
     String cond;
     String svalue;
     int ivalue;
@@ -291,6 +322,16 @@ class FilterArg{
 
     public FilterArg(){
 
+    }
+
+    void setTest (String test) {
+        switch (test) {
+            case "name" -> this.test = new filterName(pvalue);
+        }
+    }
+
+    Test getTest () {
+        return test;
     }
 
     public void setCond(String cond) {this.cond = cond; }
