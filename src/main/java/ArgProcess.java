@@ -1,4 +1,5 @@
 import org.apache.commons.cli.*;
+import org.apache.hadoop.fs.Path;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,9 @@ public class ArgProcess {
         ArgProcess.args =args;
     }
 
-    static List<FilterArg> parseArgs() {
+    static List<TestArg> parseArgs() {
 
-        List<FilterArg> al = new ArrayList<>();
+        List<TestArg> tl = new ArrayList<>();
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
@@ -103,10 +104,10 @@ public class ArgProcess {
         //take wd, path as first arg
         if(line.getArgList().size() > 0) {
             String initialPath = line.getArgList().get(0);
-            FilterArg iP = new FilterArg();
-            iP.setCond("initialPath");
-            iP.setValue(initialPath);
-            al.add(iP);
+            TestArg t = new TestArg.TestArgBuilder("initialPath")
+                    .value(initialPath)
+                    .build();
+            tl.add(t);
         } else if (!options.hasOption("h")) {
             printHelp(options, 1);
         } else {
@@ -115,136 +116,151 @@ public class ArgProcess {
         }
 
         for (Option o : line.getOptions()) {
-            FilterArg a = new FilterArg();
+            TestArg t = null;
             String v;
             switch (o.getOpt()) {
                 case "mindepth" -> {
-                    a.setCond("mindepth");
-                    a.setValue(toInteger(o.getValue()));
-                    a.setIdentifier(0);
+                    t = new TestArg.TestArgBuilder("mindepth")
+                            .value(toInteger(o.getValue()))
+                            .build();
                 }
                 case "maxdepth" -> {
-                    a.setCond("maxdepth");
-                    a.setValue(toInteger(o.getValue()));
-                    a.setIdentifier(0);
+                    t = new TestArg.TestArgBuilder("maxdepth")
+                            .value(toInteger(o.getValue()))
+                            .build();
                 }
 
                 /* NAME */
                 case "name" -> {
-                    a.setCond("name");
-                    a.setValue(Pattern.compile(toPattern(o.getValue())));
+                    t = new TestArg.TestArgBuilder("name")
+                            .value(Pattern.compile(toPattern(o.getValue())))
+                            .build();
                 }
                 case "iname" -> {
-                    a.setCond("name");
-                    a.setValue(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE));
+                    t = new TestArg.TestArgBuilder("name")
+                            .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
+                            .build();
                 }
                 case "regex" -> {
-                    a.setCond("name");
-                    a.setValue(Pattern.compile(o.getValue()));
+                    t = new TestArg.TestArgBuilder("name")
+                            .value(Pattern.compile(o.getValue()))
+                            .build();
                 }
                 case "iregex" -> {
-                    a.setCond("name");
-                    a.setValue(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE));
+                    t = new TestArg.TestArgBuilder("name")
+                            .value(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE))
+                            .build();
                 }
 
                 /* TIME */
                 case "amin" -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("atimeolder");
-                        a.setValue(toMillis(toInteger(v.replace('+', '0'))));
+                        t = new TestArg.TestArgBuilder("atimeolder")
+                                .value(toMillis(toInteger(v.replace('+', '0'))))
+                                .build();
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("atimenewer");
-                        a.setValue(toMillis(toInteger(v.replace('-', '0'))));
+                        t = new TestArg.TestArgBuilder("atimenewer")
+                                .value(toMillis(toInteger(v.replace('-', '0'))))
+                                .build();
                     } else {
-                        a.setCond("atimeequalmin");
-                        a.setValue(toMillis(toInteger(v)));
+                        t = new TestArg.TestArgBuilder("atimeequalmin")
+                                .value(toMillis(toInteger(v)))
+                                .build();
                     }
-                }
-                case "anewer" -> {
-                    a.setCond("newer");
-                    a.setValue(o.getValue());
-                    a.setIdentifier(0);
                 }
                 case "atime" -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("atimeolder");
-                        a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
-                        a.setIdentifier(1);
+                        t = new TestArg.TestArgBuilder("atimeolder")
+                                .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
+                                .build();
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("atimenewer");
-                        a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
-                        a.setIdentifier(0);
+                        t = new TestArg.TestArgBuilder("atimeequalday")
+                                .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
+                                .build();
                     } else {
-                        a.setCond("atimeequalday");
-                        a.setValue(toMillis(toInteger(v) * 1440));
-                        a.setIdentifier(3);
+                        t = new TestArg.TestArgBuilder("atimeequalday")
+                                .value(toMillis(toInteger(v) * 1440))
+                                .build();
                     }
                 }
                 case "mmin" -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("mtimeolder");
-                        a.setValue(toMillis(toInteger(v.replace('+', '0'))));
+                        t = new TestArg.TestArgBuilder("mtimeolder")
+                                .value(toMillis(toInteger(v.replace('+', '0'))))
+                                .build();
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("mtimenewer");
-                        a.setValue(toMillis(toInteger(v.replace('-', '0'))));
+                        t = new TestArg.TestArgBuilder("mtimenewer")
+                                .value(toMillis(toInteger(v.replace('-', '0'))))
+                                .build();
                     } else {
-                        a.setCond("mtimeequalmin");
-                        a.setValue(toMillis(toInteger(v)));
+                        t = new TestArg.TestArgBuilder("mtimeequalmin")
+                                .value(toMillis(toInteger(v)))
+                                .build();
                     }
                 }
                 case "mtime" -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("mtimeolder");
-                        a.setValue(toMillis(toInteger(v.replace('+', '0')) * 1440));
-                        a.setIdentifier(2);
+                        t = new TestArg.TestArgBuilder("mtimeolder")
+                                .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
+                                .build();
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("mtimenewer");
-                        a.setValue(toMillis(toInteger(v.replace('-', '0')) * 1440));
-                        a.setIdentifier(0);
+                        t = new TestArg.TestArgBuilder("mtimenewer")
+                                .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
+                                .build();
                     } else {
-                        a.setCond("mtimeequalday");
-                        a.setValue(toMillis(toInteger(v) * 1440));
-                        a.setIdentifier(3);
+                        t = new TestArg.TestArgBuilder("mtimeequalday")
+                                .value(toMillis(toInteger(v) * 1440))
+                                .build();
                     }
                 }
+                case "anewer" -> {
+                    t = new TestArg.TestArgBuilder("anewer")
+                            .value(new Connect().getFileStatus(new Path(o.getValue())))
+                            .build();
+                }
                 case "newer" -> {
-                    a.setCond("newer");
-                    a.setValue(o.getValue());
-                    a.setIdentifier(1);
+                    t = new TestArg.TestArgBuilder("newer")
+                            .value(new Connect().getFileStatus(new Path(o.getValue())))
+                            .build();
                 }
 
                 /* OTHER ATTRIBUTES */
                 case "type" -> {
-                    a.setCond("type");
-                    a.setValue(o.getValue());
+                    t = new TestArg.TestArgBuilder("type")
+                            .value(o.getValue().charAt(0))
+                            .build();
                 }
                 case "size" -> {
                     v=o.getValue();
                     if (v.charAt(0) == '+') {
-                        a.setCond("sizebigger");
-                        a.setValue(toSize(v.replace('+', '0')));
+                        t = new TestArg.TestArgBuilder("sizebigger")
+                                .value(toSize(v.replace('+', '0')))
+                                .build();
                     } else if (v.charAt(0) == '-') {
-                        a.setCond("sizesmaller");
-                        a.setValue(toSize(v.replace('-', '0')));
+                        t = new TestArg.TestArgBuilder("sizesmaller")
+                                .value(toSize(v.replace('-', '0')))
+                                .build();
                     } else {
-                        char lastChar = v.charAt(v.length() - 1);
-                        switch (lastChar) {
-                            case 'K', 'k' -> a.setCond("sizekequal");
-                            case 'M', 'm' -> a.setCond("sizemequal");
-                            case 'G', 'g' -> a.setCond("sizegequal");
-                            default -> a.setCond("sizebequal");
-                        }
-                        a.setValue(toSize(v));
+                        t = new TestArg.TestArgBuilder(
+                                switch (v.charAt(v.length() - 1)) {
+                                    case 'K', 'k' -> "sizekequal";
+                                    case 'M', 'm' -> "sizemequal";
+                                    case 'G', 'g' -> "sizegequal";
+                                    default -> "sizebequal";
+                                }
+                            )
+                                .value(toSize(v))
+                                .build();
                     }
                 }
 
                 /* OPERATORS */
-                case "o" -> a.setCond("OR");
-                case "a" -> a.setCond("AND");
+                case "o" -> t = new TestArg.TestArgBuilder("OR").value("OR").build();
+                case "a" -> t = new TestArg.TestArgBuilder("AND").value("AND").build();
 
                 /* ETC */
                 case "h" -> {
@@ -252,9 +268,9 @@ public class ArgProcess {
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + o.getOpt());
             }
-            al.add(a);
+            tl.add(t);
         }
-        return al;
+        return tl;
     }
 
     static int toInteger(String s) {
@@ -308,52 +324,4 @@ public class ArgProcess {
         System.exit(status);
     }
 
-}
-
-class FilterArg{
-    Test test;
-    String cond;
-    String svalue;
-    int ivalue;
-    boolean bvalue;
-    long lvalue;
-    Pattern pvalue;
-    int identifier;
-
-    public FilterArg(){
-
-    }
-
-    void setTest (String test) {
-        switch (test) {
-            case "name" -> this.test = new filterName(pvalue);
-        }
-    }
-
-    Test getTest () {
-        return test;
-    }
-
-    public void setCond(String cond) {this.cond = cond; }
-    public void setIdentifier(int identifier) { this.identifier = identifier; }
-    public void setValue(boolean bvalue) { this.bvalue = bvalue; }
-    public void setValue(int ivalue) { this.ivalue = ivalue; }
-    public void setValue(long lvalue) { this.lvalue = lvalue; }
-    public void setValue(String svalue) { this.svalue = svalue; }
-    public void setValue(Pattern pvalue) { this.pvalue = pvalue; }
-
-    public String getSvalue() { return svalue; }
-    public int getIvalue() { return ivalue; }
-    public boolean getBvalue() { return bvalue; }
-    public long getLvalue() { return lvalue;}
-    public Pattern getPvalue() { return pvalue; }
-    public int getIdentifier() { return identifier; }
-    public String getCond() { return cond;}
-
-    String getAllInfo() {
-        String i="cond: " + getCond() + " |";
-        i = i + "value: "+ getSvalue()+"-"+getLvalue()+"-"+getIvalue()+"-"+getBvalue()+"-";
-        i = i + "identifier: "+ getIdentifier()+" ";
-        return i;
-    }
 }
