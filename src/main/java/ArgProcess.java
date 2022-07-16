@@ -91,8 +91,8 @@ public class ArgProcess {
         //take wd, path as first arg
         if(line.getArgList().size() > 0) {
             initialPath = new Path(line.getArgList().get(0));
-        } else if (!options.hasOption("h")) {
-            printHelp(options, 1);
+        } else if (options.hasOption("h") || options.hasLongOption("help")) {
+            printHelp(options, 0);
         } else {
             System.out.println("Unexpected usage.");
             printHelp(options, 1);
@@ -106,45 +106,61 @@ public class ArgProcess {
 
             switch (Enums.findByOpt(o.getOpt())) {
                 case MINDEPTH -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.MINDEPTH)
+                    t = new TestArg.Builder(FilterArgNames.MINDEPTH)
                             .value(toDepth(toInteger(o.getValue())))
                             .build();
                 }
                 case MAXDEPTH -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.MAXDEPTH)
+                    t = new TestArg.Builder(FilterArgNames.MAXDEPTH)
                             .value(toDepth(toInteger(o.getValue())))
                             .build();
                 }
 
                 /* NAME */
                 case NAME -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
+                    t = new TestArg.Builder(FilterArgNames.NAME)
                             .value(Pattern.compile(toPattern(o.getValue())))
                             .build();
                 }
-                case INAME -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
-                        .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
-                        .build();
-                case REGEX -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
-                        .value(Pattern.compile(o.getValue()))
-                        .build();
-                case IREGEX -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
-                        .value(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE))
-                        .build();
+                case INAME -> {
+                    t = new TestArg.Builder(FilterArgNames.NAME)
+                            .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
+                            .build();
+                }
+                case REGEX -> {
+                    t = new TestArg.Builder(FilterArgNames.NAME)
+                            .value(Pattern.compile(o.getValue()))
+                            .build();
+                }
+                case IREGEX -> {
+                    t = new TestArg.Builder(FilterArgNames.NAME)
+                            .value(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE))
+                            .build();
+                }
+                case PATH -> {
+                    t = new TestArg.Builder(FilterArgNames.PATH)
+                            .value(Pattern.compile(toPattern(o.getValue())))
+                            .build();
+                }
+                case IPATH -> {
+                    t = new TestArg.Builder(FilterArgNames.PATH)
+                            .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
+                            .build();
+                }
 
                 /* TIME */
                 case AMIN -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_OLDER)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0'))))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_NEWER)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0'))))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_EQUAL_MIN)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_EQUAL_MIN)
                                 .value(toMillis(toInteger(v)))
                                 .build();
                     }
@@ -152,15 +168,15 @@ public class ArgProcess {
                 case ATIME -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_OLDER)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_NEWER)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_EQUAL_DAY)
+                        t = new TestArg.Builder(FilterArgNames.ACCESS_TIME_EQUAL_DAY)
                                 .value(toMillis(toInteger(v) * 1440))
                                 .build();
                     }
@@ -168,15 +184,15 @@ public class ArgProcess {
                 case MMIN -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_OLDER)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0'))))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_NEWER)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0'))))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_EQUAL_MIN)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_EQUAL_MIN)
                                 .value(toMillis(toInteger(v)))
                                 .build();
                     }
@@ -184,48 +200,63 @@ public class ArgProcess {
                 case MTIME -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_OLDER)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_NEWER)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_EQUAL_DAY)
+                        t = new TestArg.Builder(FilterArgNames.MODIFICATION_TIME_EQUAL_DAY)
                                 .value(toMillis(toInteger(v) * 1440))
                                 .build();
                     }
                 }
                 case ANEWER -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.NEWER_ACCESS_TIME)
+                    t = new TestArg.Builder(FilterArgNames.NEWER_ACCESS_TIME)
                             .value(new Connect().getFileStatus(new Path(o.getValue())))
                             .build();
                 }
                 case NEWER -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.NEWER_MODIFICATION_TIME)
+                    t = new TestArg.Builder(FilterArgNames.NEWER_MODIFICATION_TIME)
                             .value(new Connect().getFileStatus(new Path(o.getValue())))
                             .build();
                 }
 
                 /* OTHER ATTRIBUTES */
                 case TYPE -> {
-                    t = new TestArg.TestArgBuilder(FilterArgNames.TYPE)
+                    t = new TestArg.Builder(FilterArgNames.TYPE)
                             .value(o.getValue().charAt(0))
+                            .build();
+                }
+                case EMPTY -> {
+                    t= new TestArg.Builder(FilterArgNames.EMPTY)
+                        .value(true)
+                        .build();
+                }
+                case GROUP -> {
+                    t= new TestArg.Builder(FilterArgNames.GROUP)
+                        .value(o.getValue())
+                        .build();
+                }
+                case USER -> {
+                    t= new TestArg.Builder(FilterArgNames.USER)
+                            .value(o.getValue())
                             .build();
                 }
                 case SIZE -> {
                     v=o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.SIZE_BIGGER)
+                        t = new TestArg.Builder(FilterArgNames.SIZE_BIGGER)
                                 .value(toSize(v.replace('+', '0')))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder(FilterArgNames.SIZE_SMALLER)
+                        t = new TestArg.Builder(FilterArgNames.SIZE_SMALLER)
                                 .value(toSize(v.replace('-', '0')))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder(
+                        t = new TestArg.Builder(
                                 switch (v.charAt(v.length() - 1)) {
                                     case 'K', 'k' -> FilterArgNames.SIZE_KB_EQUAL;
                                     case 'M', 'm' -> FilterArgNames.SIZE_MB_EQUAL;
@@ -239,10 +270,14 @@ public class ArgProcess {
                 }
 
                 /* OPERATORS */
-                case OR -> t = new TestArg.TestArgBuilder(FilterArgNames.OR).value("OR").build();
-                case AND -> t = new TestArg.TestArgBuilder(FilterArgNames.AND).value("AND").build();
+                case OR -> t = new TestArg.Builder(FilterArgNames.OR).value("OR").build();
+                case AND -> t = new TestArg.Builder(FilterArgNames.AND).value("AND").build();
 
                 /* PRINT */
+                case LS -> {
+                    printarg = new PrintArg(o.getValues(), "ls");
+                    continue;
+                }
                 case PRINT0 -> {
                     printarg = new PrintArg(o.getValues(), "print0");
                     continue;

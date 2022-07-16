@@ -7,9 +7,10 @@ public class TestArg {
     private final Test test;
     private final String cond;
 
-    public TestArg(TestArgBuilder builder) {
+    public TestArg(Builder builder) {
         switch (builder.test) {
             case NAME -> this.test = new FilterName(builder.patternValue);
+            case PATH -> this.test = new FilterPath(builder.patternValue);
             case MAXDEPTH -> this.test = new FilterMaxDepth(builder.intValue);
             case MINDEPTH -> this.test = new FilterMinDepth(builder.intValue);
             case ACCESS_TIME_OLDER -> this.test = new FilterAccessTimeOlder(builder.longValue);
@@ -23,6 +24,9 @@ public class TestArg {
             case NEWER_MODIFICATION_TIME -> this.test = new FilterNewer(builder.fileValue);
             case NEWER_ACCESS_TIME -> this.test = new FilterANewer(builder.fileValue);
             case TYPE -> this.test = new FilterType(builder.charValue);
+            case EMPTY -> this.test = new FilterEmpty(builder.booleanValue);
+            case GROUP -> this.test = new FilterGroup(builder.stringValue);
+            case USER -> this.test = new FilterUser(builder.stringValue);
             case SIZE_BIGGER -> this.test = new FilterSizeBigger(builder.longValue);
             case SIZE_SMALLER-> this.test = new FilterSizeSmaller(builder.longValue);
             case SIZE_B_EQUAL -> this.test = new FilterSizeByteEqual(builder.longValue);
@@ -52,7 +56,7 @@ public class TestArg {
         return "Cond: " + cond + " test: " + test.getClass().getName() ;
     }
 
-    public static class TestArgBuilder {
+    public static class Builder {
         private final FilterArgNames test;
         private String stringValue;
         private char charValue;
@@ -62,35 +66,35 @@ public class TestArg {
         private Pattern patternValue;
         private FileStatus fileValue;
 
-        public TestArgBuilder(FilterArgNames test) {
+        public Builder(FilterArgNames test) {
             this.test=test;
         }
 
-        public TestArgBuilder value(String value) {
+        public Builder value(String value) {
             this.stringValue=value;
             return this;
         }
-        public TestArgBuilder value(char value) {
+        public Builder value(char value) {
             this.charValue=value;
             return this;
         }
-        public TestArgBuilder value(int value) {
+        public Builder value(int value) {
             this.intValue=value;
             return this;
         }
-        public TestArgBuilder value(long value) {
+        public Builder value(long value) {
             this.longValue=value;
             return this;
         }
-        public TestArgBuilder value(boolean value) {
+        public Builder value(boolean value) {
             this.booleanValue=value;
             return this;
         }
-        public TestArgBuilder value(Pattern value) {
+        public Builder value(Pattern value) {
             this.patternValue=value;
             return this;
         }
-        public TestArgBuilder value(FileStatus value) {
+        public Builder value(FileStatus value) {
             this.fileValue=value;
             return this;
         }

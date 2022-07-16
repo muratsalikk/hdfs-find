@@ -21,7 +21,6 @@ public class Filter {
         this.hfs=hfs;
         this.initialPath=initialPath;
 
-        // TODO depth value should sum with wd.depth +1
         boolean fwd = false;
 
         for (TestArg  t : tl) {

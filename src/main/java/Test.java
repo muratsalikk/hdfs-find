@@ -38,6 +38,15 @@ class FilterName implements Test {
         return (p.matcher(file.getPath().getName()).matches());
     }
 }
+class FilterPath implements Test {
+    Pattern p;
+    FilterPath(Pattern p) {
+        this.p=p;
+    }
+    public boolean execute(FileStatus file) {
+        return (p.matcher(file.getPath().toString()).matches());
+    }
+}
 
 class FilterAccessTimeNewer implements Test {
     long value;
@@ -153,6 +162,33 @@ class FilterType implements Test {
             case 'l' -> file.isSymlink();
             default -> false;
         };
+    }
+}
+class FilterEmpty implements Test {
+    boolean value;
+    FilterEmpty(boolean value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        return (file.getLen() == 0);
+    }
+}
+class FilterUser implements Test {
+    String value;
+    FilterUser(String value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        return (file.getOwner().equals(value));
+    }
+}
+class FilterGroup implements Test {
+    String value;
+    FilterGroup(String value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        return (file.getGroup().equals(value));
     }
 }
 

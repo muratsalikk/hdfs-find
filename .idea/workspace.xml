@@ -7,8 +7,8 @@
     <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Enums.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Enums.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/PrintArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PrintArg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/TestArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TestArg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filter.class" afterDir="false" />
@@ -68,7 +68,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.depth">
+  <component name="RunManager" selected="Application.timetest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
@@ -209,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657978781199</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="maxdepth stops tests when false">
+      <created>1657985316955</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1657985316955</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -248,7 +255,8 @@
     <MESSAGE value="refactored with builder and filter design pattern" />
     <MESSAGE value="added print statements" />
     <MESSAGE value="added enums for constants" />
-    <option name="LAST_COMMIT_MESSAGE" value="added enums for constants" />
+    <MESSAGE value="maxdepth stops tests when false" />
+    <option name="LAST_COMMIT_MESSAGE" value="maxdepth stops tests when false" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
