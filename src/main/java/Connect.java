@@ -76,4 +76,9 @@ public class Connect {
         }
     }
 
+    FileStatus getInitialFileStatus(Path p) {
+
+        return null;
+    }
+
 }

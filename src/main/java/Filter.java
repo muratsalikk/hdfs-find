@@ -7,27 +7,17 @@ import org.apache.hadoop.fs.Path;
 public class Filter {
     List<TestArg> tl;
     FileSystem hfs;
-    String initialPath;
-    Path wd;
+    Path initialPath;
 
-    PrintArg pa = ArgProcess.getPrintarg();
+    PrintArg pa = ArgProcess.getPrintArg();
 
-    public Filter(List<TestArg> tl, FileSystem hfs) throws Exception {
+    public Filter(List<TestArg> tl, Path initialPath, FileSystem hfs) throws Exception {
         this.tl = tl;
         for (TestArg f : tl){
             System.out.println(f.toString());
         }
         System.out.println("-----------");
         this.hfs=hfs;
-        for (TestArg  f : tl) {
-            if (f.getCond().equals("initialPath")) {
-                initialPath=f.getInitialPath();
-                tl.remove(f);
-                break;
-            }
-        }
-        assert initialPath != null;
-        this.wd = new Path(initialPath);
 
         // TODO depth value should sum with wd.depth +1
         for (TestArg  t : tl) {
@@ -35,8 +25,8 @@ public class Filter {
                 //t.setValue(t.getIvalue() + wd.depth() + 1);
             }
         }
-
-        filter(wd);
+        this.initialPath=initialPath;
+        filter(this.initialPath);
     }
 
     public void filter(Path wd) throws Exception{
@@ -49,7 +39,6 @@ public class Filter {
                 continue;
             }
             pa.print(item);
-            //System.out.println(item.getPath().toString().replace(hfs.getUri().toString() , ""));
         }
     }
 

@@ -8,100 +8,81 @@ import java.util.regex.Pattern;
 
 public class ArgProcess {
     static String[] args ;
+    static List<TestArg> tl = new ArrayList<>();
+    static Path initialPath;
+
     public ArgProcess(String[] args) {
         ArgProcess.args =args;
+        parseArgs();
     }
+    public List<TestArg> getTestArgList() {
+        return tl;
+    }
+    public Path getInitialPath() {
+        return initialPath;
+    }
+
+
 
     static PrintArg printarg = new PrintArg("default");
 
-    static List<TestArg> parseArgs() {
-
-        List<TestArg> tl = new ArrayList<>();
-        CommandLineParser parser = new DefaultParser();
+    static void parseArgs() {
         Options options = new Options();
+        CommandLineParser parser = new DefaultParser();
+        CommandLine line = null;
+        OptionGroup testOptionGroup = new OptionGroup();
+        OptionGroup printOptionGroup = new OptionGroup();
+        OptionGroup pathOptionGroup = new OptionGroup();
 
         //Define options
-        {
-            options.addOption(Option.builder("MAXDEPTH").option("maxdepth")
-                    .desc("Descend at most levels (a non-negative integer) levels of directories below the starting-points.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("MINDEPTH").option("mindepth")
-                    .desc("Do not apply any tests or actions at levels less than levels (a non-negative integer).")
-                    .hasArg()
-                    .build());
-
-
-            //NAME SEARCHES
-            options.addOption(Option.builder("NAME").option("name")
-                    .desc("Base of file name (the path with the leading directories removed) matches shell pattern pattern.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("INAME").option("iname")
-                    .desc("Like -name, but the match is case insensitive.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("REGEX").option("regex")
-                    .desc("File name matches regular expression pattern.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("IREGEX").option("iregex")
-                    .desc("Like -regex, but the match is case insensitive.")
-                    .hasArg()
-                    .build());
-
-            //TIME OPTIONS
-            options.addOption(Option.builder("AMIN").option("amin")
-                    .desc("File was last accessed n minutes ago.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("ANEWER").option("anewer")
-                    .desc("Time  of  the last access of the current file is " +
-                            "more recent than that of the last data modification of the reference file.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("ATIME").option("atime")
-                    .desc("File was last accessed n*24 hours ago.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("MMIN").option("mmin")
-                    .desc("File's data was last modified n minutes ago.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("MTIME").option("mtime")
-                    .desc("File's data was last modified n*24 hours ago.")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("NEWER").option("newer")
-                    .desc("Time  of the last data modification of the current file is " +
-                            "more recent than that of the last data modification of the reference file.")
-                    .hasArg()
-                    .build());
-
-            // OTHER ATTRIBUTES
-            options.addOption(Option.builder("TYPE").option("type")
-                    .desc("File is of type: d (directory) f (regular file) l (symbolic link)")
-                    .hasArg()
-                    .build());
-            options.addOption(Option.builder("SIZE").option("size")
-                    .desc("File uses n units of space, rounding up. b (byte) k (kibibytes) m (mebibytes) g (gibibytes)")
-                    .hasArg()
-                    .argName("n")
-                    .build());
-            options.addOption("o","Or");
-            options.addOption("a","And");
-
-            // PRINT
-            options.addOption(Option.builder("PRINTF").option("printf")
-                    .desc("Print  format on the standard output, with '%' directives.")
-                    .hasArgs()
-                    .build());
-
-            options.addOption("h", "help", false, "help");
+        for (Enums e : Enums.values()) {
+            if (e == Enums.OR || e == Enums.AND) {
+                testOptionGroup.addOption(Option.builder()
+                        .option(e.opt)
+                        .desc(e.desc)
+                        .hasArg(false)
+                        .build());
+            } else if (e == Enums.PRINT0) {
+                printOptionGroup.addOption(Option.builder()
+                        .option(e.opt)
+                        .desc(e.desc)
+                        .hasArg(false)
+                        .build());
+            } else if (e == Enums.PRINTF) {
+                printOptionGroup.addOption(Option.builder()
+                        .option(e.opt)
+                        .desc(e.desc)
+                        .hasArgs()
+                        .argName(e.argName)
+                        .build());
+            } else if (e == Enums.HELP) {
+                testOptionGroup.addOption(Option.builder()
+                        .option(e.opt)
+                        .longOpt("help")
+                        .desc(e.desc)
+                        .hasArg(false)
+                        .build());
+            } else {
+                testOptionGroup.addOption(Option.builder()
+                        .option(e.opt)
+                        .desc(e.desc)
+                        .hasArg()
+                        .argName(e.argName)
+                        .build());
+            }
         }
+        pathOptionGroup.addOption(Option.builder()
+                .option("")
+                .hasArg()
+                .argName("path")
+                .required(true)
+                .desc("Required - Initial path that tests starts on.")
+                .build());
+        options.addOptionGroup(testOptionGroup);
+        options.addOptionGroup(pathOptionGroup);
+        options.addOptionGroup(printOptionGroup);
 
 
-        CommandLine line = null;
         try {
             line = parser.parse(options, args);
         } catch (ParseException exp) {
@@ -109,13 +90,10 @@ public class ArgProcess {
             System.exit(1);
         }
 
+
         //take wd, path as first arg
         if(line.getArgList().size() > 0) {
-            String initialPath = line.getArgList().get(0);
-            TestArg t = new TestArg.TestArgBuilder("initialPath")
-                    .value(initialPath)
-                    .build();
-            tl.add(t);
+            initialPath = new Path(line.getArgList().get(0));
         } else if (!options.hasOption("h")) {
             printHelp(options, 1);
         } else {
@@ -123,142 +101,139 @@ public class ArgProcess {
             printHelp(options, 1);
         }
 
+
+        // Build TestArgList
         for (Option o : line.getOptions()) {
             TestArg t = null;
             String v;
-            switch (o.getOpt()) {
-                case "mindepth" -> {
-                    t = new TestArg.TestArgBuilder("mindepth")
+
+            switch (Enums.findByOpt(o.getOpt())) {
+                case MINDEPTH -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.MINDEPTH)
                             .value(toInteger(o.getValue()))
                             .build();
                 }
-                case "maxdepth" -> {
-                    t = new TestArg.TestArgBuilder("maxdepth")
+                case MAXDEPTH -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.MAXDEPTH)
                             .value(toInteger(o.getValue()))
                             .build();
                 }
 
                 /* NAME */
-                case "name" -> {
-                    t = new TestArg.TestArgBuilder("name")
+                case NAME -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
                             .value(Pattern.compile(toPattern(o.getValue())))
                             .build();
                 }
-                case "iname" -> {
-                    t = new TestArg.TestArgBuilder("name")
-                            .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
-                            .build();
-                }
-                case "regex" -> {
-                    t = new TestArg.TestArgBuilder("name")
-                            .value(Pattern.compile(o.getValue()))
-                            .build();
-                }
-                case "iregex" -> {
-                    t = new TestArg.TestArgBuilder("name")
-                            .value(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE))
-                            .build();
-                }
+                case INAME -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
+                        .value(Pattern.compile(toPattern(o.getValue()), Pattern.CASE_INSENSITIVE))
+                        .build();
+                case REGEX -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
+                        .value(Pattern.compile(o.getValue()))
+                        .build();
+                case IREGEX -> t = new TestArg.TestArgBuilder(FilterArgNames.NAME)
+                        .value(Pattern.compile(o.getValue(), Pattern.CASE_INSENSITIVE))
+                        .build();
 
                 /* TIME */
-                case "amin" -> {
+                case AMIN -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder("atimeolder")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0'))))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder("atimenewer")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0'))))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder("atimeequalmin")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_EQUAL_MIN)
                                 .value(toMillis(toInteger(v)))
                                 .build();
                     }
                 }
-                case "atime" -> {
+                case ATIME -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder("atimeolder")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder("atimeequalday")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder("atimeequalday")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.ACCESS_TIME_EQUAL_DAY)
                                 .value(toMillis(toInteger(v) * 1440))
                                 .build();
                     }
                 }
-                case "mmin" -> {
+                case MMIN -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder("mtimeolder")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0'))))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder("mtimenewer")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0'))))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder("mtimeequalmin")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_EQUAL_MIN)
                                 .value(toMillis(toInteger(v)))
                                 .build();
                     }
                 }
-                case "mtime" -> {
+                case MTIME -> {
                     v = o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder("mtimeolder")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_OLDER)
                                 .value(toMillis(toInteger(v.replace('+', '0')) * 1440))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder("mtimenewer")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_NEWER)
                                 .value(toMillis(toInteger(v.replace('-', '0')) * 1440))
                                 .build();
                     } else {
-                        t = new TestArg.TestArgBuilder("mtimeequalday")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.MODIFICATION_TIME_EQUAL_DAY)
                                 .value(toMillis(toInteger(v) * 1440))
                                 .build();
                     }
                 }
-                case "anewer" -> {
-                    t = new TestArg.TestArgBuilder("anewer")
+                case ANEWER -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.NEWER_ACCESS_TIME)
                             .value(new Connect().getFileStatus(new Path(o.getValue())))
                             .build();
                 }
-                case "newer" -> {
-                    t = new TestArg.TestArgBuilder("newer")
+                case NEWER -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.NEWER_MODIFICATION_TIME)
                             .value(new Connect().getFileStatus(new Path(o.getValue())))
                             .build();
                 }
 
                 /* OTHER ATTRIBUTES */
-                case "type" -> {
-                    t = new TestArg.TestArgBuilder("type")
+                case TYPE -> {
+                    t = new TestArg.TestArgBuilder(FilterArgNames.TYPE)
                             .value(o.getValue().charAt(0))
                             .build();
                 }
-                case "size" -> {
+                case SIZE -> {
                     v=o.getValue();
                     if (v.charAt(0) == '+') {
-                        t = new TestArg.TestArgBuilder("sizebigger")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.SIZE_BIGGER)
                                 .value(toSize(v.replace('+', '0')))
                                 .build();
                     } else if (v.charAt(0) == '-') {
-                        t = new TestArg.TestArgBuilder("sizesmaller")
+                        t = new TestArg.TestArgBuilder(FilterArgNames.SIZE_SMALLER)
                                 .value(toSize(v.replace('-', '0')))
                                 .build();
                     } else {
                         t = new TestArg.TestArgBuilder(
                                 switch (v.charAt(v.length() - 1)) {
-                                    case 'K', 'k' -> "sizekequal";
-                                    case 'M', 'm' -> "sizemequal";
-                                    case 'G', 'g' -> "sizegequal";
-                                    default -> "sizebequal";
+                                    case 'K', 'k' -> FilterArgNames.SIZE_KB_EQUAL;
+                                    case 'M', 'm' -> FilterArgNames.SIZE_MB_EQUAL;
+                                    case 'G', 'g' -> FilterArgNames.SIZE_GB_EQUAL;
+                                    default -> FilterArgNames.SIZE_B_EQUAL;
                                 }
                             )
                                 .value(toSize(v))
@@ -267,22 +242,21 @@ public class ArgProcess {
                 }
 
                 /* OPERATORS */
-                case "o" -> t = new TestArg.TestArgBuilder("OR").value("OR").build();
-                case "a" -> t = new TestArg.TestArgBuilder("AND").value("AND").build();
+                case OR -> t = new TestArg.TestArgBuilder(FilterArgNames.OR).value("OR").build();
+                case AND -> t = new TestArg.TestArgBuilder(FilterArgNames.AND).value("AND").build();
 
                 /* PRINT */
-                case "printf" -> {
+                case PRINTF -> {
                     printarg = new PrintArg(o.getValues(), "printf");
                     continue;
                 }
-                case "h" -> {
+                case HELP -> {
                     printHelp(options,0);
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + o.getOpt());
             }
             tl.add(t);
         }
-        return tl;
     }
 
     static int toInteger(String s) {
@@ -336,7 +310,7 @@ public class ArgProcess {
         System.exit(status);
     }
 
-    public static PrintArg getPrintarg() {
+    public static PrintArg getPrintArg() {
         return printarg;
     }
 }

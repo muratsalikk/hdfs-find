@@ -10,35 +10,31 @@ public class TestArg {
 
     public TestArg(TestArgBuilder builder) {
         switch (builder.test) {
-            case "name" -> this.test = new FilterName(builder.patternValue);
-            case "maxdepth" -> this.test = new FilterMaxDepth(builder.intValue);
-            case "mindepth" -> this.test = new FilterMinDepth(builder.intValue);
-            case "atimeolder" -> this.test = new FilterAccessTimeOlder(builder.longValue);
-            case "atimenewer" -> this.test = new FilterAccessTimeNewer(builder.longValue);
-            case "atimeequalmin" -> this.test = new FilterAccessTimeEqualMin(builder.longValue);
-            case "atimeequalday" -> this.test = new FilterAccessTimeEqualDay(builder.longValue);
-            case "mtimeolder" -> this.test = new FilterModificationTimeOlder(builder.longValue);
-            case "mtimenewer" -> this.test = new FilterModificationTimeNewer(builder.longValue);
-            case "mtimeequalmin" -> this.test = new FilterModificationTimeEqualMin(builder.longValue);
-            case "mtimeequalday" -> this.test = new FilterModificationTimeEqualDay(builder.longValue);
-            case "newer" -> this.test = new FilterNewer(builder.fileValue);
-            case "anewer" -> this.test = new FilterANewer(builder.fileValue);
-            case "type" -> this.test = new FilterType(builder.charValue);
-            case "sizebigger" -> this.test = new FilterSizeBigger(builder.longValue);
-            case "sizesmaller" -> this.test = new FilterSizeSmaller(builder.longValue);
-            case "sizebequal" -> this.test = new FilterSizeByteEqual(builder.longValue);
-            case "sizekequal" -> this.test = new FilterSizeKilobyteEqual(builder.longValue);
-            case "sizemequal" -> this.test = new FilterSizeMegabyteEqual(builder.longValue);
-            case "sizegequal" -> this.test = new FilterSizeGigabyteEqual(builder.longValue);
-            case "initialPath" -> {
-                this.initialPath = builder.stringValue;
-                this.test= new FilterTrue();
-            }
-            case "OR" -> this.test = new FilterOr();
-            case "AND" -> this.test = new FilterAnd();
+            case NAME -> this.test = new FilterName(builder.patternValue);
+            case MAXDEPTH -> this.test = new FilterMaxDepth(builder.intValue);
+            case MINDEPTH -> this.test = new FilterMinDepth(builder.intValue);
+            case ACCESS_TIME_OLDER -> this.test = new FilterAccessTimeOlder(builder.longValue);
+            case ACCESS_TIME_NEWER -> this.test = new FilterAccessTimeNewer(builder.longValue);
+            case ACCESS_TIME_EQUAL_MIN -> this.test = new FilterAccessTimeEqualMin(builder.longValue);
+            case ACCESS_TIME_EQUAL_DAY -> this.test = new FilterAccessTimeEqualDay(builder.longValue);
+            case MODIFICATION_TIME_OLDER -> this.test = new FilterModificationTimeOlder(builder.longValue);
+            case MODIFICATION_TIME_NEWER -> this.test = new FilterModificationTimeNewer(builder.longValue);
+            case MODIFICATION_TIME_EQUAL_MIN -> this.test = new FilterModificationTimeEqualMin(builder.longValue);
+            case MODIFICATION_TIME_EQUAL_DAY -> this.test = new FilterModificationTimeEqualDay(builder.longValue);
+            case NEWER_MODIFICATION_TIME -> this.test = new FilterNewer(builder.fileValue);
+            case NEWER_ACCESS_TIME -> this.test = new FilterANewer(builder.fileValue);
+            case TYPE -> this.test = new FilterType(builder.charValue);
+            case SIZE_BIGGER -> this.test = new FilterSizeBigger(builder.longValue);
+            case SIZE_SMALLER-> this.test = new FilterSizeSmaller(builder.longValue);
+            case SIZE_B_EQUAL -> this.test = new FilterSizeByteEqual(builder.longValue);
+            case SIZE_KB_EQUAL -> this.test = new FilterSizeKilobyteEqual(builder.longValue);
+            case SIZE_MB_EQUAL -> this.test = new FilterSizeMegabyteEqual(builder.longValue);
+            case SIZE_GB_EQUAL -> this.test = new FilterSizeGigabyteEqual(builder.longValue);
+            case OR -> this.test = new FilterOr();
+            case AND -> this.test = new FilterAnd();
             default -> this.test = new FilterTrue();
         }
-        this.cond= builder.test;
+        this.cond= builder.test.toString();
     }
 
     String getCond() {
@@ -59,7 +55,7 @@ public class TestArg {
     }
 
     public static class TestArgBuilder {
-        private final String test;
+        private final FilterArgNames test;
         private String stringValue;
         private char charValue;
         private int intValue;
@@ -68,7 +64,7 @@ public class TestArg {
         private Pattern patternValue;
         private FileStatus fileValue;
 
-        public TestArgBuilder(String test) {
+        public TestArgBuilder(FilterArgNames test) {
             this.test=test;
         }
 
