@@ -9,6 +9,26 @@ public interface Test {
     boolean execute(FileStatus file);
 }
 
+class FilterMinDepth implements Test {
+    int value;
+    FilterMinDepth(int value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        //System.out.println(file.getPath() + " - " + file.getPath().depth() + " - value; " + value + "result: " + (file.getPath().depth() > value -1 ));
+        return (file.getPath().depth() > value -1 );
+    }
+}
+class FilterMaxDepth implements Test {
+    int value;
+    FilterMaxDepth(int value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        return (file.getPath().depth() < value);
+    }
+}
+
 class FilterName implements Test {
     Pattern p;
     FilterName(Pattern p) {
@@ -120,24 +140,7 @@ class FilterANewer implements Test {
     }
 }
 
-class FilterMinDepth implements Test {
-    int value;
-    FilterMinDepth(int value) {
-        this.value=value;
-    }
-    public boolean execute(FileStatus file) {
-        return (file.getPath().depth() > value);
-    }
-}
-class FilterMaxDepth implements Test {
-    int value;
-    FilterMaxDepth(int value) {
-        this.value=value;
-    }
-    public boolean execute(FileStatus file) {
-        return (file.getPath().depth() < value);
-    }
-}
+
 class FilterType implements Test {
     char value;
     FilterType(char value) {

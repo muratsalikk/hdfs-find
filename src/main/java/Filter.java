@@ -8,25 +8,35 @@ public class Filter {
     List<TestArg> tl;
     FileSystem hfs;
     Path initialPath;
+    TestArg maxD = null;
 
     PrintArg pa = ArgProcess.getPrintArg();
 
     public Filter(List<TestArg> tl, Path initialPath, FileSystem hfs) throws Exception {
         this.tl = tl;
-        for (TestArg f : tl){
-            System.out.println(f.toString());
+        for (TestArg t : tl){
+            System.out.println(t.toString());
         }
         System.out.println("-----------");
         this.hfs=hfs;
+        this.initialPath=initialPath;
 
         // TODO depth value should sum with wd.depth +1
+        boolean fwd = false;
+
         for (TestArg  t : tl) {
-            if (t.getCond().equals("depth") || t.getCond().equals("mindepth") || t.getCond().equals("maxdepth")) {
-                //t.setValue(t.getIvalue() + wd.depth() + 1);
+            if ( t.getCond().equals("MAXDEPTH") ) {
+                fwd = true;
+                maxD = t;
             }
         }
-        this.initialPath=initialPath;
-        filter(this.initialPath);
+        if (fwd) {
+            filterWithDepth(this.initialPath);
+            tl.remove(maxD);
+        } else {
+            filter(this.initialPath);
+        }
+
     }
 
     public void filter(Path wd) throws Exception{
@@ -35,10 +45,24 @@ public class Filter {
             if (item.isDirectory()){
                 filter(item.getPath());
             }
-            if (!(runFilterLogic(item))){
-                continue;
+            if (runFilterLogic(item)){
+                pa.print(item);
             }
-            pa.print(item);
+        }
+    }
+
+    public void filterWithDepth(Path wd) throws Exception{
+        FileStatus[] fst = hfs.listStatus(wd);
+        for (FileStatus item : fst) {
+            if (maxD != null && !maxD.test().execute(item)) {
+                break;
+            }
+            if (item.isDirectory()){
+                filterWithDepth(item.getPath());
+            }
+            if (runFilterLogic(item)){
+                pa.print(item);
+            }
         }
     }
 
@@ -69,4 +93,5 @@ public class Filter {
         }
         return result;
     }
+
 }

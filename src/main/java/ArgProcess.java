@@ -23,21 +23,19 @@ public class ArgProcess {
     }
 
 
-
     static PrintArg printarg = new PrintArg("default");
 
     static void parseArgs() {
         Options options = new Options();
         CommandLineParser parser = new DefaultParser();
         CommandLine line = null;
-        OptionGroup testOptionGroup = new OptionGroup();
         OptionGroup printOptionGroup = new OptionGroup();
         OptionGroup pathOptionGroup = new OptionGroup();
 
         //Define options
         for (Enums e : Enums.values()) {
             if (e == Enums.OR || e == Enums.AND) {
-                testOptionGroup.addOption(Option.builder()
+                options.addOption(Option.builder()
                         .option(e.opt)
                         .desc(e.desc)
                         .hasArg(false)
@@ -56,14 +54,14 @@ public class ArgProcess {
                         .argName(e.argName)
                         .build());
             } else if (e == Enums.HELP) {
-                testOptionGroup.addOption(Option.builder()
+                options.addOption(Option.builder()
                         .option(e.opt)
                         .longOpt("help")
                         .desc(e.desc)
                         .hasArg(false)
                         .build());
             } else {
-                testOptionGroup.addOption(Option.builder()
+                options.addOption(Option.builder()
                         .option(e.opt)
                         .desc(e.desc)
                         .hasArg()
@@ -78,7 +76,6 @@ public class ArgProcess {
                 .required(true)
                 .desc("Required - Initial path that tests starts on.")
                 .build());
-        options.addOptionGroup(testOptionGroup);
         options.addOptionGroup(pathOptionGroup);
         options.addOptionGroup(printOptionGroup);
 
@@ -110,12 +107,12 @@ public class ArgProcess {
             switch (Enums.findByOpt(o.getOpt())) {
                 case MINDEPTH -> {
                     t = new TestArg.TestArgBuilder(FilterArgNames.MINDEPTH)
-                            .value(toInteger(o.getValue()))
+                            .value(toDepth(toInteger(o.getValue())))
                             .build();
                 }
                 case MAXDEPTH -> {
                     t = new TestArg.TestArgBuilder(FilterArgNames.MAXDEPTH)
-                            .value(toInteger(o.getValue()))
+                            .value(toDepth(toInteger(o.getValue())))
                             .build();
                 }
 
@@ -246,6 +243,10 @@ public class ArgProcess {
                 case AND -> t = new TestArg.TestArgBuilder(FilterArgNames.AND).value("AND").build();
 
                 /* PRINT */
+                case PRINT0 -> {
+                    printarg = new PrintArg(o.getValues(), "print0");
+                    continue;
+                }
                 case PRINTF -> {
                     printarg = new PrintArg(o.getValues(), "printf");
                     continue;
@@ -302,6 +303,10 @@ public class ArgProcess {
             case 'G', 'g' -> value * 1024 * 1024 * 1024;
             default -> (long) toInteger(s);
         };
+    }
+
+    static int toDepth(int i) {
+        return initialPath.depth() + i + 1 ;
     }
 
     static void printHelp(Options options, int status) {

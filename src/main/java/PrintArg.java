@@ -9,15 +9,15 @@ public class PrintArg {
     List<ReplacePlaceHolder> pl = new ArrayList<>();
     public PrintArg(String[] format, String type) {
         for(String s : format) {
-            this.format=new StringBuilder().append(s)
-                    .append(" ")
-                    .toString()
+            this.format= s
                     .replace("\\t", "\t")
                     .replace("\\n", "\n")
+                    .replace("\\r", "\r")
                     .replace("\\b", "\b")
                     .replace("\\s", "\s")
                     .replace("\\0", "\0")
-                    .replace("\\r", "\r");
+                    .replace("\\'", "'")
+                    .replace("\\\"", "\"");
         }
         this.type=type;
         processFormat();

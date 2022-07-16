@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 public class TestArg {
     private final Test test;
-    private String initialPath;
     private final String cond;
 
     public TestArg(TestArgBuilder builder) {
@@ -41,17 +40,16 @@ public class TestArg {
         return cond;
     }
 
-    String getInitialPath() {
-        return initialPath;
-    }
-
     Test test() {
         return test;
+    }
+    TestArg getTestArg () {
+        return this;
     }
 
     @Override
     public String toString() {
-        return "Cond: " + cond + " test: " + test.getClass().getName();
+        return "Cond: " + cond + " test: " + test.getClass().getName() ;
     }
 
     public static class TestArgBuilder {
