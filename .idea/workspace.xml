@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Enums.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Enums.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/TestArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TestArg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Filter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/PrintArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PrintArg.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +100,7 @@
     <configuration name="timetest" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/ -mtime -10 -type d  -printf &quot;%P \t %d\n&quot; " />
+      <option name="PROGRAM_PARAMETERS" value="/ -mtime -10 -type f  -printf &quot;%P -Depth: %d AccessTime: %a\n&quot; " />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -216,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657985316955</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added more tests">
+      <created>1657987581899</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1657987581899</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -256,7 +258,8 @@
     <MESSAGE value="added print statements" />
     <MESSAGE value="added enums for constants" />
     <MESSAGE value="maxdepth stops tests when false" />
-    <option name="LAST_COMMIT_MESSAGE" value="maxdepth stops tests when false" />
+    <MESSAGE value="added more tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="added more tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -29,14 +29,17 @@ public enum Enums {
             "pattern"),
 
     AMIN("amin",
-            "File was last accessed n minutes ago.",
+            "File was last accessed n minutes ago." +
+                    "If file is a directory then modification time will be calculated.",
             "n"),
     ANEWER("anewer",
             "Time  of  the last access of the current file is " +
-                    "more recent than that of the last data modification of the reference file.",
+                    "more recent than that of the last data modification of the reference file." +
+                    "If file is a directory then modification time will be calculated.",
             "reference"),
     ATIME("atime",
-            "File was last accessed n*24 hours ago.",
+            "File was last accessed n*24 hours ago." +
+                    "If file is a directory then modification time will be calculated.",
             "n"),
     MMIN("mmin",
             "File's data was last modified n minutes ago.",

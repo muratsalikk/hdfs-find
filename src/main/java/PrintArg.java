@@ -1,6 +1,10 @@
 import org.apache.hadoop.fs.FileStatus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PrintArg {
@@ -34,6 +38,8 @@ public class PrintArg {
             pl.add(new ReplacePath());
         if(format.contains("%d"))
             pl.add(new ReplaceDepth());
+        if(format.contains("%a"))
+            pl.add(new ReplaceAccessTime());
     }
 
     void print(FileStatus file) {
@@ -67,3 +73,10 @@ class ReplaceDepth implements ReplacePlaceHolder {
     }
 }
 
+class ReplaceAccessTime implements ReplacePlaceHolder {
+    public String replacePlaceHolder(FileStatus file, String input) {
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
+        String value = df.format(new Date(file.getAccessTime()));
+        return  input.replace("%a", value);
+    }
+}
