@@ -40,7 +40,7 @@ public class ArgProcess {
                         .desc(e.desc)
                         .hasArg(false)
                         .build());
-            } else if (e == Enums.PRINT0) {
+            } else if (e == Enums.PRINT0 || e == Enums.LS) {
                 printOptionGroup.addOption(Option.builder()
                         .option(e.opt)
                         .desc(e.desc)
@@ -275,11 +275,11 @@ public class ArgProcess {
 
                 /* PRINT */
                 case LS -> {
-                    printarg = new PrintArg(o.getValues(), "ls");
+                    printarg = new PrintArg("ls");
                     continue;
                 }
                 case PRINT0 -> {
-                    printarg = new PrintArg(o.getValues(), "print0");
+                    printarg = new PrintArg("print0");
                     continue;
                 }
                 case PRINTF -> {
