@@ -191,6 +191,16 @@ class FilterGroup implements Test {
         return (file.getGroup().equals(value));
     }
 }
+class FilterPerm implements Test {
+    int value;
+    FilterPerm(int value) {
+        this.value=value;
+    }
+    public boolean execute(FileStatus file) {
+        return ( (int) file.getPermission().toShort() == value);
+    }
+}
+
 
 class FilterSizeBigger implements Test {
     long value;
