@@ -41,7 +41,7 @@ public class PrintArg {
                     .replace("\\'", "'")
                     .replace("\\\"", "\"");
         } else if (type.equals("ls")) {
-            format = "%y%M\t%u\t%g\t%t\t%P\n";
+            format = "%y%M\s%u\s%g\s%TY-%Tm-%Td\s%TH:%TM\s%P\n";
         } else if (type.equals("print0")) {
             format = "%P\0";
         } else if (type.equals("default")) {
@@ -84,29 +84,53 @@ enum PlaceHolders {
     PHPERMOCTAL("%m", new ReplacePermissionOctal(), ""),
     PHPERMSYM("%M", new ReplacePermissionSymbolic(), ""),
 
-        PHTIMEH("%TH", new ReplaceTimeWithFormat("%TH"), "hour (00..23)"),
-        PHTIMEI("%TI", new ReplaceTimeWithFormat("%TI"), ""),
-        PHTIMEk("%Tk", new ReplaceTimeWithFormat("%Tk"), ""),
-        PHTIMEl("%Tl", new ReplaceTimeWithFormat("%Tl"), ""),
-        PHTIMEM("%TM", new ReplaceTimeWithFormat("%TM"), ""),
-        PHTIMEp("%Tp", new ReplaceTimeWithFormat("%Tp"), ""),
-        PHTIMEr("%Tr", new ReplaceTimeWithFormat("%Tr"), ""),
-        PHTIMES("%TS", new ReplaceTimeWithFormat("%TS"), ""),
-        PHTIMET("%TT", new ReplaceTimeWithFormat("%TT"), ""),
-        PHTIMEPLUS("%T+", new ReplaceTimeWithFormat("%T+"), ""),
-        PHTIMEa("%Ta", new ReplaceTimeWithFormat("%Ta"), ""),
-        PHTIMEA("%TA", new ReplaceTimeWithFormat("%TA"), ""),
-        PHTIMEb("%Tb", new ReplaceTimeWithFormat("%Tb"), ""),
-        PHTIMEB("%TB", new ReplaceTimeWithFormat("%TB"), ""),
-        PHTIMEd("%Td", new ReplaceTimeWithFormat("%Td"), ""),
-        PHTIMED("%TD", new ReplaceTimeWithFormat("%TD"), ""),
-        PHTIMEh("%Th", new ReplaceTimeWithFormat("%Th"), ""),
-        PHTIMEj("%Tj", new ReplaceTimeWithFormat("%Tj"), ""),
-        PHTIMEm("%Tm", new ReplaceTimeWithFormat("%Tm"), ""),
-        PHTIMEw("%Tw", new ReplaceTimeWithFormat("%Tw"), ""),
-        PHTIMEW("%TW", new ReplaceTimeWithFormat("%TW"), ""),
-        PHTIMEy("%Ty", new ReplaceTimeWithFormat("%Ty"), ""),
-        PHTIMEY("%TY", new ReplaceTimeWithFormat("%TY"), ""),
+    PHTIMEH("%TH", new ReplaceTimeWithFormat("%TH"), "hour (00..23)"),
+    PHTIMEI("%TI", new ReplaceTimeWithFormat("%TI"), ""),
+    PHTIMEk("%Tk", new ReplaceTimeWithFormat("%Tk"), ""),
+    PHTIMEl("%Tl", new ReplaceTimeWithFormat("%Tl"), ""),
+    PHTIMEM("%TM", new ReplaceTimeWithFormat("%TM"), ""),
+    PHTIMEp("%Tp", new ReplaceTimeWithFormat("%Tp"), ""),
+    PHTIMEr("%Tr", new ReplaceTimeWithFormat("%Tr"), ""),
+    PHTIMES("%TS", new ReplaceTimeWithFormat("%TS"), ""),
+    PHTIMET("%TT", new ReplaceTimeWithFormat("%TT"), ""),
+    PHTIMEPLUS("%T+", new ReplaceTimeWithFormat("%T+"), ""),
+    PHTIMEa("%Ta", new ReplaceTimeWithFormat("%Ta"), ""),
+    PHTIMEA("%TA", new ReplaceTimeWithFormat("%TA"), ""),
+    PHTIMEb("%Tb", new ReplaceTimeWithFormat("%Tb"), ""),
+    PHTIMEB("%TB", new ReplaceTimeWithFormat("%TB"), ""),
+    PHTIMEd("%Td", new ReplaceTimeWithFormat("%Td"), ""),
+    PHTIMED("%TD", new ReplaceTimeWithFormat("%TD"), ""),
+    PHTIMEh("%Th", new ReplaceTimeWithFormat("%Th"), ""),
+    PHTIMEj("%Tj", new ReplaceTimeWithFormat("%Tj"), ""),
+    PHTIMEm("%Tm", new ReplaceTimeWithFormat("%Tm"), ""),
+    PHTIMEw("%Tw", new ReplaceTimeWithFormat("%Tw"), ""),
+    PHTIMEW("%TW", new ReplaceTimeWithFormat("%TW"), ""),
+    PHTIMEy("%Ty", new ReplaceTimeWithFormat("%Ty"), ""),
+    PHTIMEY("%TY", new ReplaceTimeWithFormat("%TY"), ""),
+
+    PHATIMEH("%AH", new ReplaceATimeWithFormat("%AH"), "hour (00..23)"),
+    PHATIMEI("%AI", new ReplaceATimeWithFormat("%AI"), ""),
+    PHATIMEk("%Ak", new ReplaceATimeWithFormat("%Ak"), ""),
+    PHATIMEl("%Al", new ReplaceATimeWithFormat("%Al"), ""),
+    PHATIMEM("%AM", new ReplaceATimeWithFormat("%AM"), ""),
+    PHATIMEp("%Ap", new ReplaceATimeWithFormat("%Ap"), ""),
+    PHATIMEr("%Ar", new ReplaceATimeWithFormat("%Ar"), ""),
+    PHATIMES("%AS", new ReplaceATimeWithFormat("%AS"), ""),
+    PHATIMET("%AT", new ReplaceATimeWithFormat("%AT"), ""),
+    PHATIMEPLUS("%A+", new ReplaceATimeWithFormat("%A+"), ""),
+    PHATIMEa("%Aa", new ReplaceATimeWithFormat("%Aa"), ""),
+    PHATIMEA("%AA", new ReplaceATimeWithFormat("%AA"), ""),
+    PHATIMEb("%Ab", new ReplaceATimeWithFormat("%Ab"), ""),
+    PHATIMEB("%AB", new ReplaceATimeWithFormat("%AB"), ""),
+    PHATIMEd("%Ad", new ReplaceATimeWithFormat("%Ad"), ""),
+    PHATIMED("%AD", new ReplaceATimeWithFormat("%AD"), ""),
+    PHATIMEh("%Ah", new ReplaceATimeWithFormat("%Ah"), ""),
+    PHATIMEj("%Aj", new ReplaceATimeWithFormat("%Aj"), ""),
+    PHATIMEm("%Am", new ReplaceATimeWithFormat("%Am"), ""),
+    PHATIMEw("%Aw", new ReplaceATimeWithFormat("%Aw"), ""),
+    PHATIMEW("%AW", new ReplaceATimeWithFormat("%AW"), ""),
+    PHATIMEy("%Ay", new ReplaceATimeWithFormat("%Ay"), ""),
+    PHATIMEY("%AY", new ReplaceATimeWithFormat("%AY"), ""),
 
 
     ;
@@ -226,6 +250,27 @@ class ReplaceTimeWithFormat implements ReplacePlaceHolder {
     String format;
     String placeHolder;
     public ReplaceTimeWithFormat(String placeHolder) {
+        this.placeHolder=placeHolder;
+        char givenHolder = placeHolder.charAt(placeHolder.length()-1);
+        this.format= new FormatTimeParameter().formatTimeParameter(givenHolder);
+    }
+
+    @Override
+    public String replacePlaceHolder(FileStatus file, String input) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+        LocalDateTime cvDate = Instant.ofEpochMilli(file.getModificationTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        String value = cvDate.format(dateTimeFormatter);
+        return  input.replace(placeHolder, value);
+    }
+
+}
+
+class ReplaceATimeWithFormat implements ReplacePlaceHolder {
+    String format;
+    String placeHolder;
+    public ReplaceATimeWithFormat(String placeHolder) {
         this.placeHolder=placeHolder;
         char givenHolder = placeHolder.charAt(placeHolder.length()-1);
         this.format= new FormatTimeParameter().formatTimeParameter(givenHolder);
