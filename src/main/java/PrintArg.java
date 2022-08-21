@@ -30,7 +30,6 @@ public class PrintArg {
     }
 
     void chooseFormatType() {
-        System.out.println("Chooseformattype: " + type);
         if (type.equals("printf")) {
             format = format.replace("\\t", "\t")
                     .replace("\\n", "\n")
