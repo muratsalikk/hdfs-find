@@ -1,5 +1,6 @@
 import org.apache.commons.cli.*;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.web.resources.HttpOpParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,47 +36,22 @@ public class ArgProcess {
         //Define options
         for (Enums e : Enums.values()) {
             if (e == Enums.OR || e == Enums.AND) {
-                options.addOption(Option.builder()
-                        .option(e.opt)
-                        .desc(e.desc)
-                        .hasArg(false)
-                        .build());
+                options.addOption(new Option(e.opt,false, e.desc));
             } else if (e == Enums.PRINT0 || e == Enums.LS) {
-                printOptionGroup.addOption(Option.builder()
-                        .option(e.opt)
-                        .desc(e.desc)
-                        .hasArg(false)
-                        .build());
+                printOptionGroup.addOption(new Option(e.opt,false, e.desc));
             } else if (e == Enums.PRINTF) {
-                printOptionGroup.addOption(Option.builder()
-                        .option(e.opt)
-                        .desc(e.desc)
-                        .hasArgs()
-                        .argName(e.argName)
-                        .build());
+                printOptionGroup.addOption(new Option(e.opt, true, e.desc));
             } else if (e == Enums.HELP) {
-                options.addOption(Option.builder()
-                        .option(e.opt)
-                        .longOpt("help")
-                        .desc(e.desc)
-                        .hasArg(false)
-                        .build());
+                options.addOption(new Option(e.opt,false, e.desc));
             } else {
-                options.addOption(Option.builder()
-                        .option(e.opt)
-                        .desc(e.desc)
-                        .hasArg()
-                        .argName(e.argName)
-                        .build());
+                options.addOption(new Option(e.opt, true, e.desc));
             }
         }
-        pathOptionGroup.addOption(Option.builder()
-                .option("")
-                .hasArg()
-                .argName("path")
-                .required(true)
-                .desc("Required - Initial path that tests starts on.")
-                .build());
+
+        Option opt = new Option("", "Required - Initial path that tests starts on.");
+        opt.setRequired(true);
+        opt.setArgName("path");
+        pathOptionGroup.addOption(opt);
         options.addOptionGroup(pathOptionGroup);
         options.addOptionGroup(printOptionGroup);
 
@@ -84,12 +60,13 @@ public class ArgProcess {
             line = parser.parse(options, args);
         } catch (ParseException exp) {
             System.out.println("Unexpected exception:" + exp.getMessage());
+            exp.getStackTrace();
             System.exit(1);
         }
 
 
         //take wd, path as first arg
-        if(line.getArgList().size() > 0) {
+        if(!line.getArgList().isEmpty()) {
             initialPath = new Path(line.getArgList().get(0));
         } else if (options.hasOption("h") || options.hasLongOption("help")) {
             printHelp(options, 0);
@@ -318,7 +295,7 @@ public class ArgProcess {
     static String toPattern(String s) {
         Pattern p = Pattern.compile("[^*?]+|(\\*)|(\\?)");
         Matcher m = p.matcher(s);
-        StringBuilder b= new StringBuilder();
+        StringBuffer b= new StringBuffer();
         while (m.find()) {
             if(m.group(1) != null) m.appendReplacement(b, ".*");
             else if(m.group(2) != null) m.appendReplacement(b, ".");
