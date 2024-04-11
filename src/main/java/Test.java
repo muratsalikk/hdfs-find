@@ -1,17 +1,14 @@
 import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 public interface Test {
     boolean execute(FileStatus file);
 }
 
-class FilterMinDepth implements Test {
+class TestMinDepth implements Test {
     int value;
-    FilterMinDepth(int value) {
+    TestMinDepth(int value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -19,9 +16,9 @@ class FilterMinDepth implements Test {
         return (file.getPath().depth() > value -1 );
     }
 }
-class FilterMaxDepth implements Test {
+class TestMaxDepth implements Test {
     int value;
-    FilterMaxDepth(int value) {
+    TestMaxDepth(int value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -29,18 +26,18 @@ class FilterMaxDepth implements Test {
     }
 }
 
-class FilterName implements Test {
+class TestName implements Test {
     Pattern p;
-    FilterName(Pattern p) {
+    TestName(Pattern p) {
         this.p=p;
     }
     public boolean execute(FileStatus file) {
         return (p.matcher(file.getPath().getName()).matches());
     }
 }
-class FilterPath implements Test {
+class TestPath implements Test {
     Pattern p;
-    FilterPath(Pattern p) {
+    TestPath(Pattern p) {
         this.p=p;
     }
     public boolean execute(FileStatus file) {
@@ -48,27 +45,27 @@ class FilterPath implements Test {
     }
 }
 
-class FilterAccessTimeNewer implements Test {
+class TestAccessTimeNewer implements Test {
     long value;
-    FilterAccessTimeNewer(long value) {
+    TestAccessTimeNewer(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getAccessTime() >= value);
     }
 }
-class FilterAccessTimeOlder implements Test {
+class TestAccessTimeOlder implements Test {
     long value;
-    FilterAccessTimeOlder(long value) {
+    TestAccessTimeOlder(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getAccessTime() <= value);
     }
 }
-class FilterAccessTimeEqualDay implements Test {
+class TestAccessTimeEqualDay implements Test {
     long value;
-    FilterAccessTimeEqualDay(long value) {
+    TestAccessTimeEqualDay(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -77,9 +74,9 @@ class FilterAccessTimeEqualDay implements Test {
         return (a  == value);
     }
 }
-class FilterAccessTimeEqualMin implements Test {
+class TestAccessTimeEqualMin implements Test {
     long value;
-    FilterAccessTimeEqualMin(long value) {
+    TestAccessTimeEqualMin(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -89,27 +86,27 @@ class FilterAccessTimeEqualMin implements Test {
         return (a  == v);
     }
 }
-class FilterModificationTimeNewer implements Test {
+class TestModificationTimeNewer implements Test {
     long value;
-    FilterModificationTimeNewer(long value) {
+    TestModificationTimeNewer(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getModificationTime() >= value);
     }
 }
-class FilterModificationTimeOlder implements Test {
+class TestModificationTimeOlder implements Test {
     long value;
-    FilterModificationTimeOlder(long value) {
+    TestModificationTimeOlder(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getModificationTime() <= value);
     }
 }
-class FilterModificationTimeEqualDay implements Test {
+class TestModificationTimeEqualDay implements Test {
     long value;
-    FilterModificationTimeEqualDay(long value) {
+    TestModificationTimeEqualDay(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -118,9 +115,9 @@ class FilterModificationTimeEqualDay implements Test {
         return (a  == value);
     }
 }
-class FilterModificationTimeEqualMin implements Test {
+class TestModificationTimeEqualMin implements Test {
     long value;
-    FilterModificationTimeEqualMin(long value) {
+    TestModificationTimeEqualMin(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -130,18 +127,18 @@ class FilterModificationTimeEqualMin implements Test {
         return (a  == v);
     }
 }
-class FilterNewer implements Test {
+class TestNewer implements Test {
     FileStatus value;
-    FilterNewer(FileStatus value) {
+    TestNewer(FileStatus value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getModificationTime() >= value.getModificationTime());
     }
 }
-class FilterANewer implements Test {
+class TestANewer implements Test {
     FileStatus value;
-    FilterANewer(FileStatus value) {
+    TestANewer(FileStatus value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -150,9 +147,9 @@ class FilterANewer implements Test {
 }
 
 
-class FilterType implements Test {
+class TestType implements Test {
     char value;
-    FilterType(char value) {
+    TestType(char value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -164,27 +161,27 @@ class FilterType implements Test {
         };
     }
 }
-class FilterEmpty implements Test {
+class TestEmpty implements Test {
     boolean value;
-    FilterEmpty(boolean value) {
+    TestEmpty(boolean value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getLen() == 0);
     }
 }
-class FilterUser implements Test {
+class TestUser implements Test {
     String value;
-    FilterUser(String value) {
+    TestUser(String value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getOwner().equals(value));
     }
 }
-class FilterGroup implements Test {
+class TestGroup implements Test {
     String value;
-    FilterGroup(String value) {
+    TestGroup(String value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -192,36 +189,36 @@ class FilterGroup implements Test {
     }
 }
 
-class FilterSizeBigger implements Test {
+class TestSizeBigger implements Test {
     long value;
-    FilterSizeBigger(long value) {
+    TestSizeBigger(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getLen() >= value);
     }
 }
-class FilterSizeSmaller implements Test {
+class TestSizeSmaller implements Test {
     long value;
-    FilterSizeSmaller(long value) {
+    TestSizeSmaller(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getLen() <= value);
     }
 }
-class FilterSizeByteEqual implements Test {
+class TestSizeByteEqual implements Test {
     long value;
-    FilterSizeByteEqual(long value) {
+    TestSizeByteEqual(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
         return (file.getLen() == value);
     }
 }
-class FilterSizeKilobyteEqual implements Test {
+class TestSizeKilobyteEqual implements Test {
     long value;
-    FilterSizeKilobyteEqual(long value) {
+    TestSizeKilobyteEqual(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -230,9 +227,9 @@ class FilterSizeKilobyteEqual implements Test {
         return (a == value);
     }
 }
-class FilterSizeMegabyteEqual implements Test {
+class TestSizeMegabyteEqual implements Test {
     long value;
-    FilterSizeMegabyteEqual(long value) {
+    TestSizeMegabyteEqual(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -241,9 +238,9 @@ class FilterSizeMegabyteEqual implements Test {
         return (a == value);
     }
 }
-class FilterSizeGigabyteEqual implements Test {
+class TestSizeGigabyteEqual implements Test {
     long value;
-    FilterSizeGigabyteEqual(long value) {
+    TestSizeGigabyteEqual(long value) {
         this.value=value;
     }
     public boolean execute(FileStatus file) {
@@ -253,17 +250,17 @@ class FilterSizeGigabyteEqual implements Test {
     }
 }
 
-class FilterOr implements Test {
+class TestOr implements Test {
     public boolean execute(FileStatus file) {
         return true;
     }
 }
-class FilterAnd implements Test {
+class TestAnd implements Test {
     public boolean execute(FileStatus file) {
         return true;
     }
 }
-class FilterTrue implements Test {
+class TestTrue implements Test {
     public boolean execute(FileStatus file) {
         return true;
     }

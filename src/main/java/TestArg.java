@@ -1,3 +1,4 @@
+import Enums.FilterArgNames;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 
@@ -9,33 +10,33 @@ public class TestArg {
 
     public TestArg(Builder builder) {
         switch (builder.test) {
-            case NAME -> this.test = new FilterName(builder.patternValue);
-            case PATH -> this.test = new FilterPath(builder.patternValue);
-            case MAXDEPTH -> this.test = new FilterMaxDepth(builder.intValue);
-            case MINDEPTH -> this.test = new FilterMinDepth(builder.intValue);
-            case ACCESS_TIME_OLDER -> this.test = new FilterAccessTimeOlder(builder.longValue);
-            case ACCESS_TIME_NEWER -> this.test = new FilterAccessTimeNewer(builder.longValue);
-            case ACCESS_TIME_EQUAL_MIN -> this.test = new FilterAccessTimeEqualMin(builder.longValue);
-            case ACCESS_TIME_EQUAL_DAY -> this.test = new FilterAccessTimeEqualDay(builder.longValue);
-            case MODIFICATION_TIME_OLDER -> this.test = new FilterModificationTimeOlder(builder.longValue);
-            case MODIFICATION_TIME_NEWER -> this.test = new FilterModificationTimeNewer(builder.longValue);
-            case MODIFICATION_TIME_EQUAL_MIN -> this.test = new FilterModificationTimeEqualMin(builder.longValue);
-            case MODIFICATION_TIME_EQUAL_DAY -> this.test = new FilterModificationTimeEqualDay(builder.longValue);
-            case NEWER_MODIFICATION_TIME -> this.test = new FilterNewer(builder.fileValue);
-            case NEWER_ACCESS_TIME -> this.test = new FilterANewer(builder.fileValue);
-            case TYPE -> this.test = new FilterType(builder.charValue);
-            case EMPTY -> this.test = new FilterEmpty(builder.booleanValue);
-            case GROUP -> this.test = new FilterGroup(builder.stringValue);
-            case USER -> this.test = new FilterUser(builder.stringValue);
-            case SIZE_BIGGER -> this.test = new FilterSizeBigger(builder.longValue);
-            case SIZE_SMALLER-> this.test = new FilterSizeSmaller(builder.longValue);
-            case SIZE_B_EQUAL -> this.test = new FilterSizeByteEqual(builder.longValue);
-            case SIZE_KB_EQUAL -> this.test = new FilterSizeKilobyteEqual(builder.longValue);
-            case SIZE_MB_EQUAL -> this.test = new FilterSizeMegabyteEqual(builder.longValue);
-            case SIZE_GB_EQUAL -> this.test = new FilterSizeGigabyteEqual(builder.longValue);
-            case OR -> this.test = new FilterOr();
-            case AND -> this.test = new FilterAnd();
-            default -> this.test = new FilterTrue();
+            case NAME -> this.test = new TestName(builder.patternValue);
+            case PATH -> this.test = new TestPath(builder.patternValue);
+            case MAXDEPTH -> this.test = new TestMaxDepth(builder.intValue);
+            case MINDEPTH -> this.test = new TestMinDepth(builder.intValue);
+            case ACCESS_TIME_OLDER -> this.test = new TestAccessTimeOlder(builder.longValue);
+            case ACCESS_TIME_NEWER -> this.test = new TestAccessTimeNewer(builder.longValue);
+            case ACCESS_TIME_EQUAL_MIN -> this.test = new TestAccessTimeEqualMin(builder.longValue);
+            case ACCESS_TIME_EQUAL_DAY -> this.test = new TestAccessTimeEqualDay(builder.longValue);
+            case MODIFICATION_TIME_OLDER -> this.test = new TestModificationTimeOlder(builder.longValue);
+            case MODIFICATION_TIME_NEWER -> this.test = new TestModificationTimeNewer(builder.longValue);
+            case MODIFICATION_TIME_EQUAL_MIN -> this.test = new TestModificationTimeEqualMin(builder.longValue);
+            case MODIFICATION_TIME_EQUAL_DAY -> this.test = new TestModificationTimeEqualDay(builder.longValue);
+            case NEWER_MODIFICATION_TIME -> this.test = new TestNewer(builder.fileValue);
+            case NEWER_ACCESS_TIME -> this.test = new TestANewer(builder.fileValue);
+            case TYPE -> this.test = new TestType(builder.charValue);
+            case EMPTY -> this.test = new TestEmpty(builder.booleanValue);
+            case GROUP -> this.test = new TestGroup(builder.stringValue);
+            case USER -> this.test = new TestUser(builder.stringValue);
+            case SIZE_BIGGER -> this.test = new TestSizeBigger(builder.longValue);
+            case SIZE_SMALLER-> this.test = new TestSizeSmaller(builder.longValue);
+            case SIZE_B_EQUAL -> this.test = new TestSizeByteEqual(builder.longValue);
+            case SIZE_KB_EQUAL -> this.test = new TestSizeKilobyteEqual(builder.longValue);
+            case SIZE_MB_EQUAL -> this.test = new TestSizeMegabyteEqual(builder.longValue);
+            case SIZE_GB_EQUAL -> this.test = new TestSizeGigabyteEqual(builder.longValue);
+            case OR -> this.test = new TestOr();
+            case AND -> this.test = new TestAnd();
+            default -> this.test = new TestTrue();
         }
         this.cond= builder.test.toString();
     }

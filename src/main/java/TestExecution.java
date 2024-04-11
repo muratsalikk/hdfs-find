@@ -4,15 +4,15 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-public class Filter {
+public class TestExecution {
     List<TestArg> tl;
     FileSystem hfs;
     Path initialPath;
     TestArg maxD = null;
 
-    PrintArg pa = ArgProcess.getPrintArg();
+    PrintExecutor pa = ArgProcess.getPrintArg();
 
-    public Filter(List<TestArg> tl, Path initialPath, FileSystem hfs) throws Exception {
+    public TestExecution(List<TestArg> tl, Path initialPath, FileSystem hfs) throws Exception {
         this.tl = tl;
         for (TestArg t : tl){
             System.out.println(t.toString());
@@ -23,7 +23,7 @@ public class Filter {
 
         boolean fwd = false;
 
-        for (TestArg  t : tl) {
+        for (TestArg t : tl) {
             if ( t.getCond().equals("MAXDEPTH") ) {
                 fwd = true;
                 maxD = t;

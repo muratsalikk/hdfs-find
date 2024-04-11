@@ -20,7 +20,7 @@ public class Connect {
 
     static {
             try {
-            uri = new URI("hdfs://localhost:9000");
+            uri = new URI("hdfs://192.168.1.106:9000");
             String hdfsCoreFile = null;
             if (System.getenv("HADOOP_CONF_DIR") == null) {
                 hdfsCoreFile = System.getenv("HADOOP_HDFS_HOME") + "/etc/hadoop/" + "core-site.xml";
@@ -46,6 +46,7 @@ public class Connect {
                     }
                 }
             }
+            uri = new URI("hdfs://192.168.1.106:9000");
 
         } catch (Exception e){
             throw new RuntimeException(e);

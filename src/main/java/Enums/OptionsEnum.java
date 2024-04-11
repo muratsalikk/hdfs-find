@@ -1,7 +1,9 @@
+package Enums;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Enums {
+public enum OptionsEnum {
     MAXDEPTH("maxdepth",
             "Descend at most levels (a non-negative integer) levels of directories below the starting-points.",
             "n"),
@@ -87,39 +89,33 @@ public enum Enums {
     AND("a",
             "And..",
              null),
+    NOT ("n", "Not..", null ),
+    LEFT_PARENTHESIS("leftparenthesis" , "", null),
+    RIGHT_PARENTHESIS("rightparenthesis" , "", null),
     HELP("h",
-            "Print help.", null)    ;
-
-    final String opt;
+            "Print help.", null);
+    public final String opt;
     final String argName;
-    final String desc;
+    public final String desc;
 
-    Enums (String opt,  String desc,  String argName) {
+    OptionsEnum(String opt, String desc, String argName) {
         this.opt = opt;
         this.desc = desc;
         this.argName = argName;
     }
 
-    private static final Map<String,Enums> map;
+    public static final Map<String, OptionsEnum> map;
     static {
-        map = new HashMap<String,Enums>();
-        for (Enums v : Enums.values()) {
+        map = new HashMap<String, OptionsEnum>();
+        for (OptionsEnum v : OptionsEnum.values()) {
             map.put(v.opt, v);
         }
     }
-    public static Enums findByOpt(String opt) {
+    public static OptionsEnum findByOpt(String opt) {
         return map.get(opt);
     }
 
+
+
 }
 
-enum FilterArgNames {
-    MINDEPTH, MAXDEPTH,
-    NAME, PATH,
-    ACCESS_TIME_OLDER, ACCESS_TIME_NEWER, ACCESS_TIME_EQUAL_MIN, ACCESS_TIME_EQUAL_DAY,
-    MODIFICATION_TIME_OLDER, MODIFICATION_TIME_NEWER, MODIFICATION_TIME_EQUAL_MIN, MODIFICATION_TIME_EQUAL_DAY,
-    NEWER_ACCESS_TIME, NEWER_MODIFICATION_TIME,
-    TYPE, EMPTY, GROUP, USER,
-    SIZE_BIGGER, SIZE_SMALLER, SIZE_B_EQUAL, SIZE_KB_EQUAL, SIZE_MB_EQUAL, SIZE_GB_EQUAL,
-    OR, AND
-}

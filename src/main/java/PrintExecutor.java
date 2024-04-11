@@ -1,3 +1,4 @@
+import Enums.OptionsEnum;
 import org.apache.hadoop.fs.FileStatus;
 
 import java.text.DateFormat;
@@ -8,11 +9,11 @@ import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PrintArg {
+public class PrintExecutor {
     String format;
     String type;
     List<ReplacePlaceHolder> formatterList = new ArrayList<>();
-    public PrintArg(String[] format, String type) {
+    public PrintExecutor(String[] format, String type) {
         //for printf
         StringBuilder sBuilder = new StringBuilder();
         for(String s : format) {
@@ -23,7 +24,7 @@ public class PrintArg {
         chooseFormatType();
     }
 
-    public PrintArg(String type) {
+    public PrintExecutor(String type) {
         //for others
         this.type=type;
         chooseFormatType();
@@ -35,7 +36,7 @@ public class PrintArg {
                     .replace("\\n", "\n")
                     .replace("\\r", "\r")
                     .replace("\\b", "\b")
-                    .replace("\\s", "\s")
+                    .replace("\\s", " ")
                     .replace("\\0", "\0")
                     .replace("\\'", "'")
                     .replace("\\\"", "\"");
@@ -143,14 +144,14 @@ enum PlaceHolders {
         this.replacerClass = replacerClass;
         this.desc = desc;
     }
-    private static final Map<String,Enums> map;
+    private static final Map<String, OptionsEnum> map;
     static {
-        map = new HashMap<String,Enums>();
-        for (Enums v : Enums.values()) {
+        map = new HashMap<String, OptionsEnum>();
+        for (OptionsEnum v : OptionsEnum.values()) {
             map.put(v.opt, v);
         }
     }
-    public static Enums findByOpt(String opt) {
+    public static OptionsEnum findByOpt(String opt) {
         return map.get(opt);
     }
 

@@ -4,7 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="printf improved" />
+    <list default="true" id="6febafc6-6aa9-49c7-b17b-2b968d88527c" name="Changes" comment="moved to new workspace">
+      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ActionExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ArguementProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Enums/FilterArgNames.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/FilterExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/BaseFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterName.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterOperator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterPath.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterSize.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterTime.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Filters/FilterUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Logger/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ArgProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ArgProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Connect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Connect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Enums.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Enums/OptionsEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Exec.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TestExecution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/PrintArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PrintExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/TestArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TestArg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Filter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,9 +44,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -26,6 +57,18 @@
       </list>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="eecf0259-32a8-4021-ad80-4a02302b1e61" />
+        <option name="url" value="https://github.com/muratsalikk/hdfs-find.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -40,9 +83,9 @@
   <component name="MavenRunner">
     <option name="vmOptions" value="-Xmx256m" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2BfERAe5QVPioRkPTE8fYEyaDdE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -54,24 +97,33 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.Paranthesis.executor": "Run",
+    "Application.depth.executor": "Run",
     "Application.help.executor": "Run",
-    "Application.ls.executor": "Debug",
+    "Application.ls.executor": "Run",
+    "JAR Application.hdfs-find-1.0-SNAPSHOT.jar.executor": "Run",
+    "Maven.hdfs-find [clean,install].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/murat/Documents/IdeaProjects/hdfs-find",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.ls">
+  <component name="RunManager" selected="Application.depth">
     <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
@@ -81,10 +133,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="depth" type="Application" factoryName="Application">
+    <configuration name="Paranthesis" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/ -maxdepth 1 -type d -printf &quot;%P \t %d\n&quot;" />
+      <option name="PROGRAM_PARAMETERS" value="7 + ( 8 x 6 + ( 7 / ( 3 + 4 ) ) )  " />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="depth" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <envs>
+        <env name="HADOOP_CONF_DIR" value="C:\Users\murat\Desktop\hdfs_conf_dir\" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="hdfs-find" />
+      <option name="PROGRAM_PARAMETERS" value=" / -mindepth 3 -maxdepth 4 -type d    -printf &quot;%P\tmod:%TH:%TM\tacc%AH:%AM\n&quot; " />
+      <option name="VM_PARAMETERS" value="-Ddebug=false" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -92,7 +157,7 @@
     <configuration name="help" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="-h" />
+      <option name="PROGRAM_PARAMETERS" value="-help" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -104,7 +169,8 @@
       </envs>
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="hdfs-find" />
-      <option name="PROGRAM_PARAMETERS" value="/ -mtime -10 -ls" />
+      <option name="PROGRAM_PARAMETERS" value="/user -size -10 -a ( -user murat -o -size +50 ) -o ( -type f -group sss ) -ls" />
+      <option name="VM_PARAMETERS" value="-Ddebug=true" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -125,14 +191,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="hdfs-find-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/hdfs-find-1.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.help" />
+      <item itemvalue="Application.Paranthesis" />
       <item itemvalue="Application.timetest" />
       <item itemvalue="Application.ls" />
       <item itemvalue="Application.depth" />
       <item itemvalue="Application.printf" />
       <item itemvalue="Application.Main" />
+      <item itemvalue="JAR Application.hdfs-find-1.0-SNAPSHOT.jar" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.hdfs-find-1.0-SNAPSHOT.jar" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -262,7 +339,15 @@
       <option name="project" value="LOCAL" />
       <updated>1661037031110</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="moved to new workspace">
+      <option name="closed" value="true" />
+      <created>1704564477087</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1704564477087</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -285,7 +370,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -304,7 +401,8 @@
     <MESSAGE value="maxdepth stops tests when false" />
     <MESSAGE value="added more tests" />
     <MESSAGE value="printf improved" />
-    <option name="LAST_COMMIT_MESSAGE" value="printf improved" />
+    <MESSAGE value="moved to new workspace" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved to new workspace" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

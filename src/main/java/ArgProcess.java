@@ -1,77 +1,89 @@
+import Enums.FilterArgNames;
+import Enums.OptionsEnum;
+import Logger.Logger;
 import org.apache.commons.cli.*;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hdfs.web.resources.HttpOpParam;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Enums.OptionsEnum.*;
+
 public class ArgProcess {
+    private static final Logger logger = new Logger(ArgProcess.class);
+
     static String[] args ;
-    static List<TestArg> tl = new ArrayList<>();
+    static List<TestArg> testList = new ArrayList<>();
     static Path initialPath;
 
     public ArgProcess(String[] args) {
-        ArgProcess.args =args;
+        String[] processedArgs = new String[args.length];
+        //normlise parantheses
+        for (int i = 0; i < args.length; i++) {
+            processedArgs[i] = args[i].replace("\\(", "-leftparenthesis");
+            processedArgs[i] = args[i].replace("(", "-leftparenthesis");
+            processedArgs[i] = args[i].replace("\\)", "-rightparenthesis");
+            processedArgs[i] = args[i].replace(")", "-rightparenthesis");
+        }
+        ArgProcess.args = processedArgs;
         parseArgs();
     }
     public List<TestArg> getTestArgList() {
-        return tl;
+        return testList;
     }
     public Path getInitialPath() {
         return initialPath;
     }
 
-
-    static PrintArg printarg = new PrintArg("default");
+// what the fuck is this?
+    static PrintExecutor printarg = new PrintExecutor("default");
 
     static void parseArgs() {
         Options options = new Options();
         CommandLineParser parser = new DefaultParser();
         CommandLine line = null;
-        OptionGroup printOptionGroup = new OptionGroup();
-        OptionGroup pathOptionGroup = new OptionGroup();
 
         //Define options
-        for (Enums e : Enums.values()) {
-            if (e == Enums.OR || e == Enums.AND) {
+        for (OptionsEnum e : values()) {
+            if (e == OR || e == AND || e == NOT || e == LEFT_PARENTHESIS || e == RIGHT_PARENTHESIS ) {
                 options.addOption(new Option(e.opt,false, e.desc));
-            } else if (e == Enums.PRINT0 || e == Enums.LS) {
-                printOptionGroup.addOption(new Option(e.opt,false, e.desc));
-            } else if (e == Enums.PRINTF) {
-                printOptionGroup.addOption(new Option(e.opt, true, e.desc));
-            } else if (e == Enums.HELP) {
+            } else if (e == PRINT0 || e == LS) {
                 options.addOption(new Option(e.opt,false, e.desc));
+            } else if (e == PRINTF) {
+                options.addOption(new Option(e.opt, true, e.desc));
+            } else if (e == HELP) {
+                Option helpOption = new Option(e.opt,false, e.desc);
+                helpOption.setLongOpt("help");
+                options.addOption(helpOption);
             } else {
                 options.addOption(new Option(e.opt, true, e.desc));
             }
         }
 
-        Option opt = new Option("", "Required - Initial path that tests starts on.");
-        opt.setRequired(true);
-        opt.setArgName("path");
-        pathOptionGroup.addOption(opt);
-        options.addOptionGroup(pathOptionGroup);
-        options.addOptionGroup(printOptionGroup);
+        // start path
+        Option startPathOption = new Option("", "Required - Initial path that tests starts on.");
+        startPathOption.setArgName("path");
+        options.addOption(startPathOption);
 
 
         try {
             line = parser.parse(options, args);
         } catch (ParseException exp) {
-            System.out.println("Unexpected exception:" + exp.getMessage());
-            exp.getStackTrace();
-            System.exit(1);
+            logger.error(exp.getMessage());
+            exp.printStackTrace();
+            printHelp(options, 1);
         }
 
 
         //take wd, path as first arg
         if(!line.getArgList().isEmpty()) {
             initialPath = new Path(line.getArgList().get(0));
-        } else if (options.hasOption("h") || options.hasLongOption("help")) {
+        } else if (options.hasOption("h") || options.hasLongOption("-help")) {
             printHelp(options, 0);
         } else {
-            System.out.println("Unexpected usage.");
+            logger.error("Unexpected usage.");
             printHelp(options, 1);
         }
 
@@ -81,7 +93,7 @@ public class ArgProcess {
             TestArg t = null;
             String v;
 
-            switch (Enums.findByOpt(o.getOpt())) {
+            switch (findByOpt(o.getOpt())) {
                 case MINDEPTH -> {
                     t = new TestArg.Builder(FilterArgNames.MINDEPTH)
                             .value(toDepth(toInteger(o.getValue())))
@@ -209,13 +221,13 @@ public class ArgProcess {
                 }
                 case EMPTY -> {
                     t= new TestArg.Builder(FilterArgNames.EMPTY)
-                        .value(true)
-                        .build();
+                            .value(true)
+                            .build();
                 }
                 case GROUP -> {
                     t= new TestArg.Builder(FilterArgNames.GROUP)
-                        .value(o.getValue())
-                        .build();
+                            .value(o.getValue())
+                            .build();
                 }
                 case USER -> {
                     t= new TestArg.Builder(FilterArgNames.USER)
@@ -240,8 +252,8 @@ public class ArgProcess {
                                     case 'G', 'g' -> FilterArgNames.SIZE_GB_EQUAL;
                                     default -> FilterArgNames.SIZE_B_EQUAL;
                                 }
-                            )
-                                .value(toSize(v))
+                        )
+                                .value(Long.parseLong(v))
                                 .build();
                     }
                 }
@@ -249,18 +261,19 @@ public class ArgProcess {
                 /* OPERATORS */
                 case OR -> t = new TestArg.Builder(FilterArgNames.OR).value("OR").build();
                 case AND -> t = new TestArg.Builder(FilterArgNames.AND).value("AND").build();
+                case RIGHT_PARENTHESIS -> t = new TestArg.Builder(FilterArgNames.AND).value("AND").build();
 
                 /* PRINT */
                 case LS -> {
-                    printarg = new PrintArg("ls");
+                    printarg = new PrintExecutor("ls");
                     continue;
                 }
                 case PRINT0 -> {
-                    printarg = new PrintArg("print0");
+                    printarg = new PrintExecutor("print0");
                     continue;
                 }
                 case PRINTF -> {
-                    printarg = new PrintArg(o.getValues(), "printf");
+                    printarg = new PrintExecutor(o.getValues(), "printf");
                     continue;
                 }
                 case HELP -> {
@@ -268,8 +281,12 @@ public class ArgProcess {
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + o.getOpt());
             }
-            tl.add(t);
+            testList.add(t);
         }
+
+        logger.debug(testList.toString());
+        logger.debug(printarg.toString());
+
     }
 
     static int toInteger(String s) {
@@ -277,7 +294,7 @@ public class ArgProcess {
         try {
             n = Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            System.out.println("invalid input for date cond: "+ s);
+            logger.error("invalid input for date cond: "+ s);
             e.printStackTrace();
             System.exit(1);
         }
@@ -305,16 +322,17 @@ public class ArgProcess {
         return b.toString();
     }
 
-    static long toSize(String s) {
-        char lastChar = s.charAt(s.length()-1);
-        long value = Long.parseLong(s.substring(0,s.length()-2));
-        return switch (lastChar) {
-            case 'B', 'b' -> value;
-            case 'K', 'k' -> value * 1024;
-            case 'M', 'm' -> value * 1024 * 1024;
-            case 'G', 'g' -> value * 1024 * 1024 * 1024;
-            default -> (long) toInteger(s);
+    static long toSize(String value) {
+        char lastChar = value.charAt(value.length()-1);
+        int multiplier;
+        switch (lastChar) {
+            case 'B', 'b' -> multiplier = 1;
+            case 'K', 'k' -> multiplier = 1024;
+            case 'M', 'm' -> multiplier = 1024 * 1024;
+            case 'G', 'g' -> multiplier = 1024 * 1024 * 1024;
+            default -> multiplier =1;
         };
+        return Long.parseLong(value.substring(0,value.length()-2)) * multiplier;
     }
 
     static int toDepth(int i) {
@@ -323,11 +341,12 @@ public class ArgProcess {
 
     static void printHelp(Options options, int status) {
         HelpFormatter formatter = new HelpFormatter();
+
         formatter.printHelp("hdfs-find", "header", options, "footer", true);
         System.exit(status);
     }
 
-    public static PrintArg getPrintArg() {
+    public static PrintExecutor getPrintArg() {
         return printarg;
     }
 }
